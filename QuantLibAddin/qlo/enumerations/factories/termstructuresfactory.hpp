@@ -3,6 +3,7 @@
 /*
  Copyright (C) 2005 Plamen Neykov
  Copyright (C) 2006, 2007 Eric Ehlers
+ Copyright (C) 2016 Stefano Fondi
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -24,6 +25,7 @@
 #include <oh/enumerations/typefactory.hpp>
 #include <ql/types.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+#include <ql/math/interpolations/mixedinterpolation.hpp>
 
 namespace QuantLib {
     class Calendar;
@@ -46,7 +48,9 @@ namespace ObjectHandler {
             const QuantLib::DayCounter& dayCounter,
             const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
             const std::vector<QuantLib::Date>& jumpDates,
-            const QuantLib::Real accuracy);
+            const QuantLib::Real accuracy,
+            const QuantLib::MixedInterpolation::Behavior behavior,
+            const QuantLib::Size n);
 
     template<>
     class Create<boost::shared_ptr<QuantLib::YieldTermStructure> > :
@@ -62,14 +66,16 @@ namespace ObjectHandler {
                 const QuantLib::DayCounter& dayCounter,
                 const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
                 const std::vector<QuantLib::Date>& jumpDates,
-                const QuantLib::Real accuracy) {
+                const QuantLib::Real accuracy,
+                const QuantLib::MixedInterpolation::Behavior behavior,
+                const QuantLib::Size n) {
             KeyPair key(traitsID, interpolatorID);
             YieldTermStructureConstructor yieldTermStructureConstructor =
                 reinterpret_cast<YieldTermStructureConstructor>(getType(key));
             return yieldTermStructureConstructor(nDays, calendar,
                                                  rh, dayCounter,
                                                  jumps, jumpDates,
-                                                 accuracy);
+                                                 accuracy, behavior, n);
         }
         using RegistryManager<QuantLib::YieldTermStructure,
                               EnumPairRegistry>::registerType;

@@ -1,6 +1,7 @@
 /* -*- mode: c++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
 /*
+ Copyright (C) 2016 Stefano Fondi
  Copyright (C) 2007, 2008 Ferdinando Ametrano
  Copyright (C) 2006 Marco Bianchetti
  Copyright (C) 2006, 2007 Eric Ehlers
@@ -163,6 +164,66 @@ namespace QuantLibAddin {
             const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
             const std::vector<QuantLib::Date>& jumpDates,
             QuantLib::Real accuracy);
+    boost::shared_ptr<QuantLib::YieldTermStructure> DISCOUNT_MixedLinearCubicNaturalSpline_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
+    boost::shared_ptr<QuantLib::YieldTermStructure> DISCOUNT_LogMixedLinearCubicNaturalSpline_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
+    boost::shared_ptr<QuantLib::YieldTermStructure> DISCOUNT_MixedLinearMonotonicCubicNaturalSpline_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
+    boost::shared_ptr<QuantLib::YieldTermStructure> DISCOUNT_LogMixedLinearMonotonicCubicNaturalSpline_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
+    boost::shared_ptr<QuantLib::YieldTermStructure> DISCOUNT_MixedLinearKrugerCubic_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
+    boost::shared_ptr<QuantLib::YieldTermStructure> DISCOUNT_LogMixedLinearKrugerCubic_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
 
     /* *** ZeroYield based *** */
     boost::shared_ptr<QuantLib::YieldTermStructure> ZEROYIELD_BACKWARDFLAT_PiecewiseYieldCurve(
@@ -293,6 +354,66 @@ namespace QuantLibAddin {
             const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
             const std::vector<QuantLib::Date>& jumpDates,
             QuantLib::Real accuracy);
+    boost::shared_ptr<QuantLib::YieldTermStructure> ZEROYIELD_MixedLinearCubicNaturalSpline_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
+    boost::shared_ptr<QuantLib::YieldTermStructure> ZEROYIELD_LogMixedLinearCubicNaturalSpline_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
+    boost::shared_ptr<QuantLib::YieldTermStructure> ZEROYIELD_MixedLinearMonotonicCubicNaturalSpline_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
+    boost::shared_ptr<QuantLib::YieldTermStructure> ZEROYIELD_LogMixedLinearMonotonicCubicNaturalSpline_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
+    boost::shared_ptr<QuantLib::YieldTermStructure> ZEROYIELD_MixedLinearKrugerCubic_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
+    boost::shared_ptr<QuantLib::YieldTermStructure> ZEROYIELD_LogMixedLinearKrugerCubic_PiecewiseYieldCurve(
+            QuantLib::Natural nDays,
+            const QuantLib::Calendar& calendar,
+            const std::vector<boost::shared_ptr<QuantLib::RateHelper> >& rateHelpers,
+            const QuantLib::DayCounter& dayCounter,
+            const std::vector<QuantLib::Handle<QuantLib::Quote> >& jumps,
+            const std::vector<QuantLib::Date>& jumpDates,
+            QuantLib::Real accuracy,
+            QuantLib::MixedInterpolation::Behavior behavior,
+            QuantLib::Size n);
 
     /* *** ForwardRate based *** */
     boost::shared_ptr<QuantLib::YieldTermStructure> FORWARDRATE_BACKWARDFLAT_PiecewiseYieldCurve(
