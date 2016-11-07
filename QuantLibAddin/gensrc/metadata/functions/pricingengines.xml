@@ -15,6 +15,8 @@
     <include>ql/termstructures/volatility/swaption/swaptionvolstructure.hpp</include>
     <include>ql/pricingengines/swaption/jamshidianswaptionengine.hpp</include>
     <include>ql/pricingengines/swaption/g2swaptionengine.hpp</include>
+	<include>ql/qle/pricingengines/discountingfxforwardengine.hpp</include>
+	<include>ql/qle/pricingengines/discountingcurrencyswapengine.hpp</include>
 
   </serializationIncludes>
   <addinIncludes>
@@ -30,11 +32,14 @@
     <include>ql/termstructures/volatility/swaption/swaptionvolstructure.hpp</include>
     <include>ql/pricingengines/swaption/jamshidianswaptionengine.hpp</include>
     <include>ql/pricingengines/swaption/g2swaptionengine.hpp</include>
+	<include>ql/qle/pricingengines/discountingfxforwardengine.hpp</include>
+	<include>ql/qle/pricingengines/discountingcurrencyswapengine.hpp</include>
 
   </addinIncludes>
   <copyright>
     Copyright (C) 2006, 2007, 2008, 2012 Ferdinando Ametrano
     Copyright (C) 2007 Eric Ehlers
+    Copyright (C) 2016 Stefano Fondi
   </copyright>
   <Functions>
 
@@ -312,6 +317,54 @@
             <type>QuantLib::Real</type>
             <tensorRank>scalar</tensorRank>
             <description>standard deviation, i.e. annualized ABSOLUTE volatility times the square root of time to option expiry.</description>
+          </Parameter>
+          <Parameter name='Deflator' default='1.0'>
+            <type>QuantLib::Real</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Deflator (usually the discount factor, or the annuity, etc.).</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+      <ReturnValue>
+        <type>QuantLib::Real</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Procedure>
+    
+    <Procedure name='qlBachelierBlackFormulaImpliedVol'>
+      <description>Normal implied volatility.</description>
+      <alias>QuantLib::bachelierBlackFormulaImpliedVol</alias>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name='Excel'/>
+        <!--SupportedPlatform name='Cpp'/-->
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <Parameter name='OptionType'>
+            <type>QuantLib::Option::Type</type>
+            <tensorRank>scalar</tensorRank>
+            <description>option type (i.e. Call or Put).</description>
+          </Parameter>
+          <Parameter name='Strike' exampleValue='100.0'>
+            <type>QuantLib::Real</type>
+            <tensorRank>scalar</tensorRank>
+            <description>option strike.</description>
+          </Parameter>
+          <Parameter name='AtmForwardValue' exampleValue='100.0'>
+            <type>QuantLib::Real</type>
+            <tensorRank>scalar</tensorRank>
+            <description>underlying asset at-the-money forward value.</description>
+          </Parameter>
+          <Parameter name='TimeToExpiry' exampleValue='0.3'>
+            <type>QuantLib::Real</type>
+            <tensorRank>scalar</tensorRank>
+            <description>time to expiry as year fraction.</description>
+          </Parameter>
+          <Parameter name='OptionPrice' exampleValue='7.97'>
+            <type>QuantLib::Real</type>
+            <tensorRank>scalar</tensorRank>
+            <description>option price.</description>
           </Parameter>
           <Parameter name='Deflator' default='1.0'>
             <type>QuantLib::Real</type>
@@ -1275,6 +1328,175 @@
         </Parameters>
       </ParameterList>
     </Constructor>
+	
+	    <Constructor name="qlDiscountingFxForwardEngine">
+      <libraryFunction>DiscountingFxForwardEngine</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name="Excel"/>
+        <SupportedPlatform name="Calc"/>
+        <SupportedPlatform name="Cpp"/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+		  <Parameter exampleValue="USD" name="CCY1">
+            <type>QuantLib::Currency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Currency1.</description>
+          </Parameter>
+          <Parameter name="Currency1Discountcurve">
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>currency1 Discountcurve yield term structure object ID.</description>
+          </Parameter>
+		  <Parameter exampleValue="GBP" name="CCY2">
+            <type>QuantLib::Currency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Currency2.</description>
+          </Parameter>
+		  <Parameter name="Currency2Discountcurve">
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>currency2 Discountcurve yield term structure object ID.</description>
+          </Parameter>
+		  <Parameter name="SpotFX">
+            <type>QuantLib::Quote</type>
+            <!--<type>QuantLib::SimpleQuote</type>-->
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>Spot FX quotes.</description>
+          </Parameter>
+          <Parameter const="False" default="true" name="IncludeSettlDate">
+            <type>bool</type>
+            <tensorRank>scalar</tensorRank>
+            <description>TRUE if cashflows paid at the settlement date must be taken into account.</description>
+          </Parameter>
+          <Parameter const="False" default="QuantLib::Date()" name="SettlementDate">
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>cashflows before this date are not taken into account. If missing it is assumed equal to the discounting yield term structure's reference date.</description>
+          </Parameter>
+          <Parameter const="False" default="QuantLib::Date()" name="NpvDate">
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>all cashflows are discounted to this date. If missing it is assumed equal to the discounting yield term structure's reference date.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+    </Constructor>
+	
+	<Constructor name="qlCrossCcySwapEngine">
+      <libraryFunction>CrossCcySwapEngine</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name="Excel"/>
+        <SupportedPlatform name="Calc"/>
+        <SupportedPlatform name="Cpp"/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+		  <Parameter exampleValue="USD" name="CCY1">
+            <type>QuantLib::Currency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Currency1.</description>
+          </Parameter>
+          <Parameter name="Currency1Discountcurve">
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>currency1 Discountcurve yield term structure object ID.</description>
+          </Parameter>
+		  <Parameter exampleValue="GBP" name="CCY2">
+            <type>QuantLib::Currency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Currency2.</description>
+          </Parameter>
+		  <Parameter name="Currency2Discountcurve">
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>currency2 Discountcurve yield term structure object ID.</description>
+          </Parameter>
+		  <Parameter name="SpotFX">
+            <type>QuantLib::Quote</type>
+            <!--<type>QuantLib::SimpleQuote</type>-->
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>Spot FX quotes.</description>
+          </Parameter>
+          <Parameter const="False" default="true" name="IncludeSettlDate">
+            <type>bool</type>
+            <tensorRank>scalar</tensorRank>
+            <description>TRUE if cashflows paid at the settlement date must be taken into account.</description>
+          </Parameter>
+          <Parameter const="False" default="QuantLib::Date()" name="SettlementDate">
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>cashflows before this date are not taken into account. If missing it is assumed equal to the discounting yield term structure's reference date.</description>
+          </Parameter>
+          <Parameter const="False" default="QuantLib::Date()" name="NpvDate">
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>all cashflows are discounted to this date. If missing it is assumed equal to the discounting yield term structure's reference date.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+    </Constructor>
+
+    <!--DiscountingCurrencySwapEngine delete currecntly-->
+	<Constructor name="qlDiscountingCurrencySwapEngine">
+      <libraryFunction>DiscountingCurrencySwapEngine</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name="Excel"/>
+        <SupportedPlatform name="Calc"/>
+        <SupportedPlatform name="Cpp"/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <Parameter name="DiscountCurves">
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>vector</tensorRank>
+            <description>Discount Curves object IDs.</description>
+          </Parameter>
+		  <Parameter name="FXQuotes">
+            <type>QuantLib::Quote</type>
+            <!--<type>QuantLib::SimpleQuote</type>-->
+            <superType>libToHandle</superType>
+            <tensorRank>vector</tensorRank>
+            <description>Spot FX quotes.</description>
+          </Parameter>
+		  <Parameter name="Currencies">
+            <type>QuantLib::Currency</type>
+            <tensorRank>vector</tensorRank>
+            <description>Currency.</description>
+          </Parameter>
+		  <Parameter exampleValue="GBP" name="NpvCurrency">
+            <type>QuantLib::Currency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Npv Currency.</description>
+          </Parameter>
+          <Parameter const="False" default="true" name="IncludeSettlDate">
+            <type>bool</type>
+            <tensorRank>scalar</tensorRank>
+            <description>TRUE if cashflows paid at the settlement date must be taken into account.</description>
+          </Parameter>
+          <Parameter const="False" default="QuantLib::Date()" name="SettlementDate">
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>cashflows before this date are not taken into account. If missing it is assumed equal to the discounting yield term structure's reference date.</description>
+          </Parameter>
+          <Parameter const="False" default="QuantLib::Date()" name="NpvDate">
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>all cashflows are discounted to this date. If missing it is assumed equal to the discounting yield term structure's reference date.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+    </Constructor>
 
     <Constructor name='qlBlackSwaptionEngine'>
       <libraryFunction>BlackSwaptionEngine</libraryFunction>
@@ -1400,6 +1622,63 @@
             <type>QuantLib::Real</type>
             <tensorRank>scalar</tensorRank>
             <description>displacement in a displaced diffusion model.</description>
+          </Parameter>
+          <Parameter name='DayCounter' default='"Actual/365 (Fixed)"'>
+            <type>QuantLib::DayCounter</type>
+            <tensorRank>scalar</tensorRank>
+            <description>DayCounter ID.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+    </Constructor>
+
+    <Constructor name='qlBachelierCapFloorEngine'>
+      <libraryFunction>BachelierCapFloorEngine</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name='Excel'/>
+        <SupportedPlatform name='Calc'/>
+        <SupportedPlatform name='Cpp'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <Parameter name='YieldCurve' exampleValue='EURYC'>
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>discounting YieldTermStructure object ID.</description>
+          </Parameter>
+          <Parameter name='VolTS' exampleValue='EUROptionlet6M'>
+            <type>QuantLib::OptionletVolatilityStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>OptionletVolatilityStructure object ID.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+    </Constructor>
+
+    <Constructor name='qlBachelierCapFloorEngine2'>
+      <libraryFunction>BachelierCapFloorEngine</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name='Excel'/>
+        <SupportedPlatform name='Calc'/>
+        <SupportedPlatform name='Cpp'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <Parameter name='YieldCurve' exampleValue='EURYC'>
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>discounting YieldTermStructure object ID.</description>
+          </Parameter>
+          <Parameter name='Vol'>
+            <type>QuantLib::Quote</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>Term (i.e. flat) volatility.</description>
           </Parameter>
           <Parameter name='DayCounter' default='"Actual/365 (Fixed)"'>
             <type>QuantLib::DayCounter</type>
