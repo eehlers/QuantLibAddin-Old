@@ -1,0 +1,117 @@
+<?xml version="1.0" ?><Category name="fx">
+  <description>functions to construct and use Swap objects.</description>
+  <displayName>Fx</displayName>
+  <xlFunctionWizardCategory>QuantPlus - Financial</xlFunctionWizardCategory>
+  <serializationIncludes>
+    <include>qlo/baseinstruments.hpp</include>
+	<include>qlo/fx.hpp</include>
+    <include>ql/qle/instruments/all.hpp</include>
+    <include>ql/exchangerate.hpp</include>
+    <include>ql/currency.hpp</include>
+	<include>ql/quote.hpp</include>
+	<include>ql/cashflow.hpp</include>
+	<include>qlo/leg.hpp</include>
+  </serializationIncludes>
+  <addinIncludes>
+    <include>qlo/baseinstruments.hpp</include>
+	<include>qlo/fx.hpp</include>
+    <include>ql/qle/instruments/all.hpp</include>
+    <include>ql/exchangerate.hpp</include>
+    <include>ql/currency.hpp</include>
+	<include>ql/quote.hpp</include>
+	<include>qlo/leg.hpp</include>
+	<include>ql/cashflow.hpp</include>
+  </addinIncludes>
+  <copyright>
+    Copyright (C) 2005 Eric Ehlers
+    Copyright (C) 2016 QuantRisk
+  </copyright>
+  <Functions>
+      <Constructor name="qlFxForward">
+      <libraryFunction>FxForward</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name="Excel"/>
+        <SupportedPlatform name="Cpp"/>
+      </SupportedPlatforms>
+      <processorName>InstrumentProcessor</processorName>
+      <ParameterList>
+        <Parameters>
+		  <Parameter exampleValue="1000000" name="Notional1">
+            <type>QuantLib::Real</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Notional1 amount.</description>
+          </Parameter>
+          <Parameter exampleValue="USD" name="Currency1">
+            <type>QuantLib::Currency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Currency1.</description>
+          </Parameter>
+          <Parameter name="Notional2">
+            <type>QuantLib::Real</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Notional2 amount.</description>
+          </Parameter>
+          <Parameter name="Currency2">
+            <type>QuantLib::Currency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Currency2.</description>
+          </Parameter>
+		  <Parameter name="MaturityDate">
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Date on which currency amounts are exchanged.</description>
+          </Parameter>
+		  <Parameter name="PayCurrency1">
+            <type>bool</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Pay nominal1 if true, otherwise pay nominal2.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+    </Constructor>
+	
+	      <Constructor name="qlCrossCcySwap">
+      <libraryFunction>CrossCcySwap</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name="Excel"/>
+        <SupportedPlatform name="Cpp"/>
+      </SupportedPlatforms>
+      <processorName>InstrumentProcessor</processorName>
+      <ParameterList>
+        <Parameters>
+		<Parameter name="FirstLeg">
+            <type>QuantLib::Leg</type>
+            <!--
+            
+                it would be better to have support
+                for vector of underlyingClass
+                
+            <type>QuantLib::Leg</type>
+            <supertype>underlyingClass</supertype>
+          -->
+            <tensorRank>scalar</tensorRank>
+            <description>FirstLeg ID.</description>
+          </Parameter>
+          <Parameter exampleValue="USD" name="FirstLegCcy">
+            <type>QuantLib::Currency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>FirstLegCcy.</description>
+          </Parameter>
+		  <Parameter name="SecondLeg">
+            <type>QuantLib::Leg</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Second Leg ID.</description>
+          </Parameter>
+          <Parameter name="SecondLegCcy">
+            <type>QuantLib::Currency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>SecondLegCcy.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+    </Constructor>
+  
+  </Functions>
+  </Category>

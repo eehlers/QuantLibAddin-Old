@@ -50,6 +50,7 @@ namespace QuantLib {
     class GeneralizedBlackScholesProcess;
     class OneFactorAffineModel;
     class G2;
+	class Currency;
 
     template <class T>
     class Handle;
@@ -233,6 +234,50 @@ namespace QuantLibAddin {
                QuantLib::Size intervals,
                bool permanent);
     };
+
+	class DiscountingFxForwardEngine : public PricingEngine{
+	public:
+		DiscountingFxForwardEngine(
+			const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
+			const QuantLib::Currency& ccy1,
+			const QuantLib::Handle<QuantLib::YieldTermStructure>& currency1Discountcurve,
+			const QuantLib::Currency& ccy2,
+			const QuantLib::Handle<QuantLib::YieldTermStructure>& currency2Discountcurve,
+			QuantLib::Handle<QuantLib::Quote>& spotFX,
+			bool includeSettlementDateFlows,
+			const QuantLib::Date& settlementDate,
+			const QuantLib::Date& npvDate,
+			bool permanent);
+	};
+
+	class CrossCcySwapEngine : public PricingEngine{
+	public:
+		CrossCcySwapEngine(			
+			const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
+			const QuantLib::Currency& ccy1,
+			const QuantLib::Handle<QuantLib::YieldTermStructure>& currency1Discountcurve,
+			const QuantLib::Currency& ccy2,
+			const QuantLib::Handle<QuantLib::YieldTermStructure>& currency2Discountcurve,
+			QuantLib::Handle<QuantLib::Quote>& spotFX,
+			bool includeSettlementDateFlows,
+			const QuantLib::Date& settlementDate,
+			const QuantLib::Date& npvDate,
+			bool permanent);
+	};
+
+	class DiscountingCurrencySwapEngine : public PricingEngine{
+	public:
+		DiscountingCurrencySwapEngine(
+			const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
+			const std::vector<QuantLib::Handle<QuantLib::YieldTermStructure> >& discountCurves,
+			const std::vector<QuantLib::Handle<QuantLib::Quote> >& fxQuotes, 
+			const std::vector<QuantLib::Currency>& currencies,
+			const QuantLib::Currency& npvCurrency,
+			bool includeSettlementDateFlows,
+			const QuantLib::Date& settlementDate,
+			const QuantLib::Date& npvDate,
+			bool permanent);
+	};
 }
 
 #endif
