@@ -853,6 +853,10 @@
           <value>QuantLib::ModifiedPreceding</value>
         </EnumeratedType>
         <EnumeratedType>
+          <string>U</string>
+          <value>QuantLib::Unadjusted</value>
+        </EnumeratedType>
+        <EnumeratedType>
           <string>Unadjusted</string>
           <value>QuantLib::Unadjusted</value>
         </EnumeratedType>
