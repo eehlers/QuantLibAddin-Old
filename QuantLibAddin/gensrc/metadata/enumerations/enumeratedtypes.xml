@@ -205,6 +205,10 @@
           <value>QuantLib::Australia()</value>
         </EnumeratedType>
         <EnumeratedType>
+          <string>Botswana</string>
+          <value>QuantLib::Botswana()</value>
+        </EnumeratedType>
+        <EnumeratedType>
           <string>Brazil::Settlement</string>
           <value>QuantLib::Brazil(QuantLib::Brazil::Settlement)</value>
         </EnumeratedType>
