@@ -758,11 +758,23 @@
           <value>QuantLib::Actual365Fixed(QuantLib::Actual365Fixed::NoLeap)</value>
         </EnumeratedType>
         <EnumeratedType>
+          <string>Actual/365 (NL)</string>
+          <value>QuantLib::Actual365Fixed(QuantLib::Actual365Fixed::NoLeap)</value>
+        </EnumeratedType>
+        <EnumeratedType>
           <string>Actual/365 (JGB)</string>
           <value>QuantLib::Actual365Fixed(QuantLib::Actual365Fixed::NoLeap)</value>
         </EnumeratedType>
         <EnumeratedType>
           <string>Act/365 (NL)</string>
+          <value>QuantLib::Actual365Fixed(QuantLib::Actual365Fixed::NoLeap)</value>
+        </EnumeratedType>
+        <EnumeratedType>
+          <string>A/365 (NL)</string>
+          <value>QuantLib::Actual365Fixed(QuantLib::Actual365Fixed::NoLeap)</value>
+        </EnumeratedType>
+        <EnumeratedType>
+          <string>A/365NL</string>
           <value>QuantLib::Actual365Fixed(QuantLib::Actual365Fixed::NoLeap)</value>
         </EnumeratedType>
         <EnumeratedType>
