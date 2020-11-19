@@ -34,7 +34,9 @@ namespace ObjectHandler {
             callerDimensions_(CallerDimensions::Uninitialized),
             error_(false) {
         OH_REQUIRE(!instance_, "Multiple attempts to initialize global FunctionCall object");
-        instance_ = this;
+        
+        //DS 19-Nov-20 Moved this line to after the Excel block, in case an exception is thrown
+        //instance_ = this;
 
         Excel(xlfCaller, &xCaller_, 0);
         if (xCaller_->xltype == xltypeRef || xCaller_->xltype == xltypeSRef) {
@@ -48,6 +50,8 @@ namespace ObjectHandler {
         } else {
             callerType_ = CallerType::Unknown;
         }
+
+        instance_ = this;
     }
 
     FunctionCall::~FunctionCall() {
