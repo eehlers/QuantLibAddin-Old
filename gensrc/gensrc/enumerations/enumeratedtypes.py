@@ -116,7 +116,7 @@ class EnumeratedTypeGroup(serializable.Serializable):
 
     def postSerialize(self):
         """Invoke any post serialization behavior that may be required."""
-        for enumeratedType in self.enumeratedTypes_.values():
+        for enumeratedType in list(self.enumeratedTypes_.values()):
             enumeratedType.setType(self.type_)
             enumeratedType.setConstructor(self.constructor_)
 

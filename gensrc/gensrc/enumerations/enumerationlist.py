@@ -82,7 +82,7 @@ class EnumerationList(object):
             xmlEnumTypes.serializeObjectDict(self, enumeratedtypes.EnumeratedTypeGroup)
             xmlEnumTypes.serializeProperty(self, common.ENUM_TYPE_COPYRIGHT)
             self.hasEnumeratedTypes = True
-            for item in self.enumeratedTypeGroups_.values():
+            for item in list(self.enumeratedTypeGroups_.values()):
                 self.typeDict_[item.type()] = item.includeFile()
         else:
             self.hasEnumeratedTypes = False
@@ -92,7 +92,7 @@ class EnumerationList(object):
             xmlEnumClasses.serializeObjectDict(self, enumeratedclasses.EnumeratedClassGroup)
             xmlEnumClasses.serializeProperty(self, common.ENUM_CLASS_COPYRIGHT)
             self.hasEnumeratedClasses = True
-            for item in self.enumeratedClassGroups_.values():
+            for item in list(self.enumeratedClassGroups_.values()):
                 self.typeDict_[item.className()] = item.includeFile()
         else:
             self.hasEnumeratedClasses= False
@@ -102,7 +102,7 @@ class EnumerationList(object):
             xmlEnumPairs.serializeObjectDict(self, enumeratedpairs.EnumeratedPairGroup)
             xmlEnumPairs.serializeProperty(self, common.ENUM_PAIR_COPYRIGHT)
             self.hasEnumeratedPairs = True
-            for item in self.enumeratedPairGroups_.values():
+            for item in list(self.enumeratedPairGroups_.values()):
                 self.typeDict_[item.className()] = item.includeFile()
         else:
             self.hasEnumeratedPairs = False
@@ -114,7 +114,7 @@ class EnumerationList(object):
         ret = []
         for p in parameterList:
             if p.fullType().superType() == common.ENUM \
-            and self.typeDict_.has_key(p.fullType().value()):
+            and p.fullType().value() in self.typeDict_:
                 ret.append(self.typeDict_[p.fullType().value()])
         return ret
 

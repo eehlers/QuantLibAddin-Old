@@ -27,5 +27,5 @@ class Log(singleton.Singleton):
     def logMessage(self, message = ''):
         """Print a message to stdout."""
         #print time.strftime('%d-%b-%Y %H:%M:%S ') + message
-        print message
+        print(message)
 

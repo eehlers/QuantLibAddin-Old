@@ -51,10 +51,10 @@ class TypeList(object):
         If the FullType has already been derived then return it.  If not then
         construct it, add it to the dict of known FullTypes, and return it."""
 
-        if self.fullTypeDict_.has_key((dataTypeName, superTypeName)):
+        if (dataTypeName, superTypeName) in self.fullTypeDict_:
             return self.fullTypeDict_[dataTypeName, superTypeName]
 
-        if self.dataTypeDict_.dataTypes().has_key(dataTypeName):
+        if dataTypeName in self.dataTypeDict_.dataTypes():
             dataType = self.dataTypeDict_.dataTypes()[dataTypeName]
         else:
             raise exceptions.InvalidTypeNameException(dataTypeName)
@@ -64,7 +64,7 @@ class TypeList(object):
         else:
             superTypeNameEffective = dataType.defaultSuperType()
 
-        if self.superTypeDict_.superTypes().has_key(superTypeNameEffective):
+        if superTypeNameEffective in self.superTypeDict_.superTypes():
             superType = self.superTypeDict_.superTypes()[superTypeNameEffective]
         else:
             raise exceptions.InvalidSuperTypeNameException(superTypeNameEffective)

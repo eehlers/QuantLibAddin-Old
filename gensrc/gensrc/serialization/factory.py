@@ -53,7 +53,7 @@ class Factory(singleton.Singleton):
 
     def makeObject(self, className):
         """Construct an object given its class name."""
-        if self.creators_.has_key(className):
+        if className in self.creators_:
             return self.creators_[className]()
         else:
             raise exceptions.SerializationCreatorException(className)

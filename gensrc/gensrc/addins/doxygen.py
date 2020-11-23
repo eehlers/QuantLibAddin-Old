@@ -83,10 +83,10 @@ class Doxygen(addin.Addin):
     def generateEnums(self):
         """Generate documentation for enumerations."""
         bufClassLinks = ''
-        for i in xrange(self.enumerationList_.enumeratedClassGroupsCount()):
+        for i in range(self.enumerationList_.enumeratedClassGroupsCount()):
             bufClassLinks += Doxygen.LINE_REF_CLASS % i
         bufTypeLinks = ''
-        for i in xrange(self.enumerationList_.enumeratedTypeGroupsCount()):
+        for i in range(self.enumerationList_.enumeratedTypeGroupsCount()):
             bufTypeLinks += Doxygen.LINE_REF_TYPE % i
         bufClassDocs = ''
         i = 0

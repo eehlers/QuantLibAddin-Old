@@ -27,16 +27,15 @@ class MetaSingleton(type):
     """Meta type for the Singleton class."""
 
     def __new__(metaclass, strName, tupBases, dict):
-        if dict.has_key('__new__'):
+        if '__new__' in dict:
             raise exceptions.SingletonOverrideNewException()
         return super(MetaSingleton,metaclass).__new__(metaclass, strName, tupBases, dict)
         
     def __call__(cls, *lstArgs, **dictArgs):
         raise exceptions.SingletonCallException()
 
-class Singleton(object):
+class Singleton(object, metaclass=MetaSingleton):
     """Implementation of the Singleton pattern."""
-    __metaclass__ = MetaSingleton
     
     def instance(cls):
         """Call this to instantiate an instance or retrieve the existing instance."""

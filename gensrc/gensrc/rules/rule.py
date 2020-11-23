@@ -34,7 +34,7 @@ import codedict
 
 def getCode(codeID):
     """Retrieve the requested item from module codedict.py"""
-    if codedict.__dict__.has_key(codeID):
+    if codeID in codedict.__dict__:
         return codedict.__dict__[codeID]
     else:
         raise exceptions.RuleCodeInvalidException(codeID)
@@ -80,8 +80,8 @@ class Rule(serializable.Serializable):
         return self.code_
 
     def printDebug(self):
-        print self.tensorRank_, self.superType_, self.nativeType_, self.type_, \
-            self.default_, self.loop_, self.code_
+        print(self.tensorRank_, self.superType_, self.nativeType_, self.type_, \
+            self.default_, self.loop_, self.code_)
 
     #############################################
     # serializer interface
@@ -216,11 +216,11 @@ class RuleGroup(serializable.Serializable):
 
     def printDebug(self):
         """Write debug information to stdout."""
-        print "debug rule group *****"
-        print self.name_, self.delimiter_, self.checkParameterIgnore_, \
-            self.checkSkipFirst_, self.indent_
+        print("debug rule group *****")
+        print(self.name_, self.delimiter_, self.checkParameterIgnore_, \
+            self.checkSkipFirst_, self.indent_)
         for ruleItem in self.rules_:
-            print "print rule item: *****"
+            print("print rule item: *****")
             ruleItem.printDebug()
 
     #############################################

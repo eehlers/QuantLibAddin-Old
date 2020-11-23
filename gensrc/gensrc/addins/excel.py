@@ -34,6 +34,7 @@ from gensrc.utilities import log
 
 import re
 import string
+from functools import reduce
 
 # Constants
 
@@ -61,7 +62,7 @@ CELL_MAX_COL_NUM = 16384        # value XFD expressed as base 26 number
 CELL_MAX_ROW_NUM = 1048576      # the last row in Excel 2007
 CELL_NAME_REGEX = re.compile(r'(?P<colLabel>[A-Z]+)(?P<rowLabel>\d+)', re.I)
 # We need the 1-based index of letters so prefix the alphabet with a dummy character
-COL_TO_NUM = "_" + string.lowercase
+COL_TO_NUM = "_" + string.ascii_lowercase
 
 class ExcelAddin(addin.Addin):
     """Generate source code for Excel addin."""
@@ -117,7 +118,7 @@ class ExcelAddin(addin.Addin):
 
     def indexOfCol(self, str):
         """Convert an Excel column ID to an int"""
-        return reduce(lambda x, y: 26 * x + y, map(COL_TO_NUM.index, str.lower()))
+        return reduce(lambda x, y: 26 * x + y, list(map(COL_TO_NUM.index, str.lower())))
 
     def cellNameConflict(self, funcName):
         """Return a boolean indicating whether the given function name

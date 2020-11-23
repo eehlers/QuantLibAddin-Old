@@ -42,7 +42,7 @@ class Category(serializable.Serializable):
 
     def platformSupported(self, platformName, implementation):
         """Determine whether this category is supported for given platform."""
-        for func in self.functions_.values():
+        for func in list(self.functions_.values()):
             if func.platformSupported(platformName, implementation):
                 return True
 
@@ -109,7 +109,7 @@ class Category(serializable.Serializable):
         """Perform post serialization initialization."""
         self.generateVOs_ = False
         self.containsLoopFunction_ = False
-        for func in self.functions_.values():
+        for func in list(self.functions_.values()):
             if func.generateVOs():
                 self.generateVOs_ = True
             if func.loopParameter():
@@ -126,7 +126,7 @@ class Category(serializable.Serializable):
         ret = ''
         if environment.config().usingEnumerations():
             enumIncludes = []
-            for func in self.functions_.values():
+            for func in list(self.functions_.values()):
                 if constructorOnly and not func.generateVOs(): continue
                 enumIncludes.extend(enumerationList.enumIncludes(
                     func.parameterList().parameters()))

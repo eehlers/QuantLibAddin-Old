@@ -48,7 +48,7 @@ usage: %(scriptName)s -[flags] --oh_dir
     ObjectHandler source code tree."""
 
 def usage():
-    print USAGE_ERROR % { 'scriptName' : sys.argv[0] }
+    print(USAGE_ERROR % { 'scriptName' : sys.argv[0] })
     sys.exit(1)
 
 # set the error handler

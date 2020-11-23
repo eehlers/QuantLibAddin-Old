@@ -45,7 +45,7 @@ class CategoryList(object):
                     yield cat
 
     def init(self, enumerationList):
-        for cat in self.categoryDict_.values():
+        for cat in list(self.categoryDict_.values()):
             cat.init(enumerationList)
 
     #############################################
@@ -56,7 +56,7 @@ class CategoryList(object):
         if not configPath: return
         for categoryName in catList:
             cat = utilities.serializeObject(category.Category, configPath + 'metadata/functions/' + categoryName)
-            if self.categoryDict_.has_key(cat.name()):
+            if cat.name() in self.categoryDict_:
                 raise exceptions.DuplicateNameException(cat.name())
             self.categoryDict_[cat.name()] = cat
     
