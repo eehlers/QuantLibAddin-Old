@@ -2076,6 +2076,21 @@
       </EnumeratedTypes>
     </EnumeratedTypeGroup>
 
+    <EnumeratedTypeGroup type='QuantLib::Bond::Price::Type'>
+      <includeFile>oh/enumerations/typefactory.hpp</includeFile>
+      <constructor>true</constructor>
+      <EnumeratedTypes>
+        <EnumeratedType>
+          <string>Clean</string>
+          <value>QuantLib::Bond::Price::Type::Clean</value>
+        </EnumeratedType>
+        <EnumeratedType>
+          <string>Dirty</string>
+          <value>QuantLib::Bond::Price::Type::Dirty</value>
+        </EnumeratedType>
+      </EnumeratedTypes>
+    </EnumeratedTypeGroup>
+
   </EnumeratedTypeGroups>
 
 </root>

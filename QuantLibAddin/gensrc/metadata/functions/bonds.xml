@@ -715,6 +715,47 @@
       </ReturnValue>
     </Procedure>
 
+    <Member name='qlBondPriceFromYieldTermStructure' type='QuantLibAddin::Bond'>
+      <description>Returns the bond price implied by the given YieldTermStructure and settlement date.</description>
+      <libraryFunction>price</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name='Excel'/>
+        <SupportedPlatform name='Calc'/>
+        <!--SupportedPlatform name='Cpp'/-->
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <!--<Parameter name='ObjectId'>
+            <type>QuantLib::Bond</type>
+            <superType>underlyingClass</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>id of existing QuantLib::Bond object</description>
+          </Parameter>-->
+          <Parameter name='PriceType' default='"Dirty"'>
+            <type>QuantLib::Bond::Price::Type</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Bond price type to calculate. Clean or Dirty.</description>
+          </Parameter>
+          <Parameter name='YieldCurve' exampleValue='EURYC'>
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>underlyingClass</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>discounting YieldTermStructure object ID.</description>
+          </Parameter>
+          <Parameter name='SettlementDate' const='False' default='QuantLib::Date()'>
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>The current bond settlement date is used if no specific date is given.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+      <ReturnValue>
+        <type>QuantLib::Real</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+    
     <Procedure name='qlBondBpsFromYieldTermStructure'>
       <description>Returns the basis point sensitivity implied by the given YieldTermStructure and settlement date.</description>
       <alias>QuantLib::BondFunctions::bps</alias>
@@ -752,7 +793,7 @@
     </Procedure>
 
     <Procedure name='qlBondAtmRateFromYieldTermStructure'>
-      <description>Returns the ATM rate implied by the given YieldTermStructure, settlement date, and clean price.</description>
+      <description>Returns the ATM rate implied by the given YieldTermStructure, settlement date, and price.</description>
       <alias>QuantLib::BondFunctions::atmRate</alias>
       <SupportedPlatforms>
         <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
@@ -779,10 +820,15 @@
             <tensorRank>scalar</tensorRank>
             <description>The current bond settlement date is used if no specific date is given.</description>
           </Parameter>
-          <Parameter name='CleanPrice' const='False' exampleValue='99.8'>
+          <Parameter name='Price' const='False' exampleValue='99.8'>
             <type>QuantLib::Real</type>
             <tensorRank>scalar</tensorRank>
-            <description>clean price.</description>
+            <description>Price.</description>
+          </Parameter>
+          <Parameter name='PriceType' default='"Dirty"'>
+            <type>QuantLib::Bond::Price::Type</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Bond price type. Clean or Dirty.</description>
           </Parameter>
         </Parameters>
       </ParameterList>
@@ -893,6 +939,61 @@
         <tensorRank>scalar</tensorRank>
       </ReturnValue>
     </Procedure>
+
+    <Member name='qlBondPriceFromYield' type='QuantLibAddin::Bond'>
+      <description>Returns the bond price implied by the given yield and settlement date.</description>
+      <libraryFunction>price</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name='Excel'/>
+        <SupportedPlatform name='Calc'/>
+        <!--SupportedPlatform name='Cpp'/-->
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <!--<Parameter name='ObjectId'>
+            <type>QuantLib::Bond</type>
+            <superType>underlyingClass</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>id of existing QuantLib::Bond object</description>
+          </Parameter>-->
+          <Parameter name='PriceType' default='"Dirty"'>
+            <type>QuantLib::Bond::Price::Type</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Bond price type to calculate. Clean or Dirty.</description>
+          </Parameter>
+          <Parameter name='Yield' const='False' exampleValue='4.00%'>
+            <type>QuantLib::Rate</type>
+            <tensorRank>scalar</tensorRank>
+            <description>bond yield.</description>
+          </Parameter>
+          <Parameter name='DayCounter' default='"Actual/Actual (ISDA)"'>
+            <type>QuantLib::DayCounter</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Yield DayCounter ID.</description>
+          </Parameter>
+          <Parameter name='Compounding' const='False' default='"Compounded"'>
+            <type>QuantLib::Compounding</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Interest rate coumpounding rule (Simple:1+rt, Compounded:(1+r)^t, Continuous:e^{rt}).</description>
+          </Parameter>
+          <Parameter name='Frequency' const='False' default='"Annual"'>
+            <type>QuantLib::Frequency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>frequency (e.g. Annual, Semiannual, Every4Month, Quarterly, Bimonthly, Monthly).</description>
+          </Parameter>
+          <Parameter name='SettlementDate' const='False' default='QuantLib::Date()'>
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>The current bond settlement date is used if no specific date is given.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+      <ReturnValue>
+        <type>QuantLib::Real</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
 
     <Procedure name='qlBondBpsFromYield'>
       <description>Returns the basis point sensitivity implied by the given yield and settlement date.</description>
@@ -1008,6 +1109,76 @@
         <tensorRank>scalar</tensorRank>
       </ReturnValue>
     </Procedure>
+
+    <Member name='qlBondYieldFromPrice' type='QuantLibAddin::Bond'>
+      <description>Returns the yield for the given bond corresponding to the given clean or dirty price and settlement date.</description>
+      <libraryFunction>yield</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name='Excel'/>
+        <SupportedPlatform name='Calc'/>
+        <!--SupportedPlatform name='Cpp'/-->
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <!--<Parameter name='ObjectId'>
+            <type>QuantLib::Bond</type>
+            <superType>underlyingClass</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>id of existing QuantLib::Bond object</description>
+          </Parameter>-->
+          <Parameter name='Price' const='False' exampleValue='99.8'>
+            <type>QuantLib::Real</type>
+            <tensorRank>scalar</tensorRank>
+            <description>price.</description>
+          </Parameter>
+          <Parameter name='PriceType' default='"Dirty"'>
+            <type>QuantLib::Bond::Price::Type</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Bond price type. Clean or Dirty.</description>
+          </Parameter>
+          <Parameter name='DayCounter' default='"Actual/Actual (ISDA)"'>
+            <type>QuantLib::DayCounter</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Yield DayCounter ID.</description>
+          </Parameter>
+          <Parameter name='Compounding' const='False' default='"Compounded"'>
+            <type>QuantLib::Compounding</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Interest rate coumpounding rule (Simple:1+rt, Compounded:(1+r)^t, Continuous:e^{rt}).</description>
+          </Parameter>
+          <Parameter name='Frequency' const='False' default='"Annual"'>
+            <type>QuantLib::Frequency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>frequency (e.g. Annual, Semiannual, Every4Month, Quarterly, Bimonthly, Monthly).</description>
+          </Parameter>
+          <Parameter name='SettlementDate' const='False' default='QuantLib::Date()'>
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>The current bond settlement date is used if no specific date is given.</description>
+          </Parameter>
+          <Parameter name='Accuracy' default='1.0e-10'>
+            <type>QuantLib::Real</type>
+            <tensorRank>scalar</tensorRank>
+            <description>tolerance.</description>
+          </Parameter>
+          <Parameter name='MaxIterations' default='100'>
+            <type>QuantLib::Size</type>
+            <tensorRank>scalar</tensorRank>
+            <description>max number of iterations.</description>
+          </Parameter>
+          <Parameter name='Guess' default='0.05'>
+            <type>QuantLib::Rate</type>
+            <tensorRank>scalar</tensorRank>
+            <description>guess.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+      <ReturnValue>
+        <type>QuantLib::Rate</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
 
     <Procedure name='qlBondDurationFromYield'>
       <description>Returns the duration implied by the given yield and settlement date.</description>
@@ -1172,6 +1343,67 @@
       </ReturnValue>
     </Procedure>
 
+    <Member name='qlBondPriceFromZSpread' type='QuantLibAddin::Bond'>
+      <description>Returns the bond price implied by the given Z-Spread, discount curve, and settlement date.</description>
+      <libraryFunction>price</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name='Excel'/>
+        <SupportedPlatform name='Calc'/>
+        <!--SupportedPlatform name='Cpp'/-->
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <!--<Parameter name='ObjectId'>
+            <type>QuantLib::Bond</type>
+            <superType>underlyingClass</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>id of existing QuantLib::Bond object</description>
+          </Parameter>-->
+          <Parameter name='PriceType' default='"Dirty"'>
+            <type>QuantLib::Bond::Price::Type</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Bond price type. Clean or Dirty.</description>
+          </Parameter>
+          <Parameter name='YieldCurve' exampleValue='EURYC'>
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libraryClass</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>discounting YieldTermStructure object ID.</description>
+          </Parameter>
+          <Parameter name='ZSpread' const='False' exampleValue='0.30%'>
+            <type>QuantLib::Spread</type>
+            <tensorRank>scalar</tensorRank>
+            <description>the Z-spread.</description>
+          </Parameter>
+          <Parameter name='DayCounter' default='"Actual/Actual (ISDA)"'>
+            <type>QuantLib::DayCounter</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Yield DayCounter ID.</description>
+          </Parameter>
+          <Parameter name='Compounding' const='False' default='"Compounded"'>
+            <type>QuantLib::Compounding</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Interest rate coumpounding rule (Simple:1+rt, Compounded:(1+r)^t, Continuous:e^{rt}).</description>
+          </Parameter>
+          <Parameter name='Frequency' const='False' default='"Annual"'>
+            <type>QuantLib::Frequency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>frequency (e.g. Annual, Semiannual, Every4Month, Quarterly, Bimonthly, Monthly).</description>
+          </Parameter>
+          <Parameter name='SettlementDate' const='False' default='QuantLib::Date()'>
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>The current bond settlement date is used if no specific date is given.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+      <ReturnValue>
+        <type>QuantLib::Real</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+    
     <Procedure name='qlBondZSpreadFromCleanPrice'>
       <description>Returns the z-spread for the given bond corresponding to the given clean price and settlement date.</description>
       <alias>QuantLib::BondFunctions::zSpread</alias>
@@ -1245,6 +1477,84 @@
       </ReturnValue>
     </Procedure>
 
+    <Procedure name='qlBondZSpreadFromPrice'>
+      <description>Returns the z-spread for the given bond corresponding to the given price and settlement date.</description>
+      <alias>QuantLib::BondFunctions::zSpread</alias>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name='Excel'/>
+        <SupportedPlatform name='Calc'/>
+        <!--SupportedPlatform name='Cpp'/-->
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <Parameter name='ObjectId'>
+            <type>QuantLib::Bond</type>
+            <superType>underlyingClass</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>id of existing QuantLib::Bond object</description>
+          </Parameter>
+          <Parameter name='Price' const='False' exampleValue='96.8'>
+            <type>QuantLib::Real</type>
+            <tensorRank>scalar</tensorRank>
+            <description>price.</description>
+          </Parameter>
+          <Parameter name='PriceType' default='"Dirty"'>
+            <type>QuantLib::Bond::Price::Type</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Bond price type. Clean or Dirty.</description>
+          </Parameter>
+          <Parameter name='YieldCurve' exampleValue='EURYC'>
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libraryClass</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>discounting YieldTermStructure object ID.</description>
+          </Parameter>
+          <Parameter name='DayCounter' default='"Actual/Actual (ISDA)"'>
+            <type>QuantLib::DayCounter</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Yield DayCounter ID.</description>
+          </Parameter>
+          <Parameter name='Compounding' const='False' default='"Compounded"'>
+            <type>QuantLib::Compounding</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Interest rate coumpounding rule (Simple:1+rt, Compounded:(1+r)^t, Continuous:e^{rt}).</description>
+          </Parameter>
+          <Parameter name='Frequency' const='False' default='"Annual"'>
+            <type>QuantLib::Frequency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>frequency (e.g. Annual, Semiannual, Every4Month, Quarterly, Bimonthly, Monthly).</description>
+          </Parameter>
+
+          <Parameter name='SettlementDate' const='False' default='QuantLib::Date()'>
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>The current bond settlement date is used if no specific date is given.</description>
+          </Parameter>
+
+          <Parameter name='Accuracy' default='1.0e-10'>
+            <type>QuantLib::Real</type>
+            <tensorRank>scalar</tensorRank>
+            <description>tolerance.</description>
+          </Parameter>
+          <Parameter name='MaxIterations' default='100'>
+            <type>QuantLib::Size</type>
+            <tensorRank>scalar</tensorRank>
+            <description>max number of iterations.</description>
+          </Parameter>
+          <Parameter name='Guess' default='0.0'>
+            <type>QuantLib::Spread</type>
+            <tensorRank>scalar</tensorRank>
+            <description>guess.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+      <ReturnValue>
+        <type>QuantLib::Spread</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Procedure>
+
     <!-- QuantLib::Bond Calculation -->
     
     <Member name='qlBondCleanPrice' type='QuantLib::Bond'>
@@ -1257,6 +1567,29 @@
       </SupportedPlatforms>
       <ParameterList>
         <Parameters/>
+      </ParameterList>
+      <ReturnValue>
+        <type>double</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+
+    <Member name='qlBondPrice' type='QuantLibAddin::Bond'>
+      <description>Returns the clean or dirty price for the given bond.</description>
+      <libraryFunction>price</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+        <SupportedPlatform name='Calc'/>
+        <!--SupportedPlatform name='Cpp'/-->
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <Parameter name='PriceType' default='"Dirty"'>
+            <type>QuantLib::Bond::Price::Type</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Bond price type to calculate. Clean or Dirty.</description>
+          </Parameter>
+        </Parameters>
       </ParameterList>
       <ReturnValue>
         <type>double</type>

@@ -15,6 +15,7 @@
 #include <ql/currencies/all.hpp>
 #include <ql/experimental/risk/sensitivityanalysis.hpp>
 #include <ql/instruments/asianoption.hpp>
+#include <ql/instruments/bond.hpp>
 #include <ql/instruments/barrieroption.hpp>
 #include <ql/instruments/capfloor.hpp>
 #include <ql/instruments/forward.hpp>

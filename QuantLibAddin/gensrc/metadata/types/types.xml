@@ -4,6 +4,7 @@
 
     <DataType defaultSuperType='enumeration'>QuantLib::Average::Type</DataType>
     <DataType defaultSuperType='enumeration'>QuantLib::Barrier::Type</DataType>
+    <DataType defaultSuperType='enumeration'>QuantLib::Bond::Price::Type</DataType>
     <DataType defaultSuperType='enumeration'>QuantLib::BusinessDayConvention</DataType>
     <DataType defaultSuperType='enumeration'>QuantLib::Calendar</DataType>
     <DataType defaultSuperType='enumeration'>QuantLib::CapFloor::Type</DataType>
