@@ -23,6 +23,7 @@
     <DataType defaultSuperType='enumeration'>QuantLib::Pillar::Choice</DataType>
     <DataType defaultSuperType='enumeration'>QuantLib::VolatilityType</DataType>
     <DataType defaultSuperType='enumeration'>QuantLib::Position::Type</DataType>
+    <DataType defaultSuperType='enumeration'>QuantLib::RateAveraging::Type</DataType>
     <DataType defaultSuperType='enumeration'>QuantLib::Replication::Type</DataType>
     <DataType defaultSuperType='enumeration'>QuantLib::SalvagingAlgorithm::Type</DataType>
     <DataType defaultSuperType='enumeration'>QuantLib::SensitivityAnalysis</DataType>
@@ -79,6 +80,7 @@
     <DataType defaultSuperType='libraryClass'>QuantLib::CmsCouponPricer</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::CmsMarket</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::CmsMarketCalibration</DataType>
+    <DataType defaultSuperType='libraryClass'>QuantLib::ConstNotionalCrossCurrencyBasisSwapRateHelper</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::Constraint</DataType>
     <DataType defaultSuperType='objectClass'>QuantLib::CorrelationTermStructure</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::CoterminalSwapCurveState</DataType>
@@ -104,6 +106,7 @@
     <DataType defaultSuperType='libraryClass'>QuantLib::G2</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::HistoricalForwardRatesAnalysis</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::HistoricalRatesAnalysis</DataType>
+    <DataType defaultSuperType='libraryClass'>QuantLib::IborIborBasisSwapRateHelper</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::IborIndex</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::Euribor</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::Index</DataType>
@@ -120,6 +123,7 @@
     <DataType defaultSuperType='libraryClass'>QuantLib::MarketModelEvolver</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::MarketModelFactory</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::MarketModelMultiProduct</DataType>
+    <DataType defaultSuperType='libraryClass'>QuantLib::MtMCrossCurrencyBasisSwapRateHelper</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::MultiProductComposite</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::NumericHaganPricer</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::NthToDefault</DataType>
@@ -129,6 +133,8 @@
     <DataType defaultSuperType='libraryClass'>QuantLib::OptionletStripper1</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::OptionletStripper2</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::OptionletStripper</DataType>
+    <DataType defaultSuperType='libraryClass'>QuantLib::OvernightIborBasisSwapRateHelper</DataType>
+    <DataType defaultSuperType='libraryClass'>QuantLib::OvernightIndexFutureRateHelper</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::Payoff</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::PercentageStrikePayoff</DataType>
     <DataType defaultSuperType='libraryClass'>QuantLib::PiecewiseConstantAbcdVariance</DataType>

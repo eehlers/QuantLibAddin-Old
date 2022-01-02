@@ -7,6 +7,7 @@
  Copyright (C) 2006, 2007, 2008, 2009, 2012, 2015 Ferdinando Ametrano
  Copyright (C) 2007 Marco Bianchetti
  Copyright (C) 2015 Maddalena Zanzi
+ Copyright (C) 2022 Sebastian Schlenkrich
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -32,6 +33,7 @@
 #include <ql/time/frequency.hpp>
 #include <ql/instruments/futures.hpp>
 #include <ql/termstructures/bootstraphelper.hpp>
+#include <ql/cashflows/rateaveraging.hpp>
 
 namespace QuantLib {
     class YieldTermStructure;
@@ -201,6 +203,91 @@ namespace QuantLibAddin {
             const QuantLib::Handle<QuantLib::Quote>& fixedRate,
             const boost::shared_ptr<QuantLib::OvernightIndex>& overnightIndex,
             const QuantLib::Handle<QuantLib::YieldTermStructure>& discount,
+            bool permanent);
+    };
+
+    class OvernightIndexFutureRateHelper : public RateHelper {
+    public:
+        OvernightIndexFutureRateHelper(
+            const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
+            const QuantLib::Handle<QuantLib::Quote>& price,
+            // first day of reference period
+            const QuantLib::Date& valueDate,
+            // delivery date
+            const QuantLib::Date& maturityDate,
+            const boost::shared_ptr<QuantLib::OvernightIndex>& overnightIndex,
+            const QuantLib::Handle<QuantLib::Quote>& convexityAdjustment,
+            QuantLib::RateAveraging::Type averagingMethod,
+            bool permanent);
+    };
+
+    class IborIborBasisSwapRateHelper : public RateHelper {
+    public:
+        IborIborBasisSwapRateHelper(
+            const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
+            const QuantLib::Handle<QuantLib::Quote>& basis,
+            const QuantLib::Period& tenor,
+            QuantLib::Natural settlementDays,
+            const QuantLib::Calendar& calendar,
+            QuantLib::BusinessDayConvention convention,
+            bool endOfMonth,
+            const boost::shared_ptr<QuantLib::IborIndex>& baseIndex,
+            const boost::shared_ptr<QuantLib::IborIndex>& otherIndex,
+            const QuantLib::Handle<QuantLib::YieldTermStructure>& discountHandle,
+            bool bootstrapBaseCurve,
+            bool permanent);
+    };
+
+    class OvernightIborBasisSwapRateHelper : public RateHelper {
+    public:
+        OvernightIborBasisSwapRateHelper(
+            const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
+            const QuantLib::Handle<QuantLib::Quote>& basis,
+            const QuantLib::Period& tenor,
+            QuantLib::Natural settlementDays,
+            const QuantLib::Calendar& calendar,
+            QuantLib::BusinessDayConvention convention,
+            bool endOfMonth,
+            const boost::shared_ptr<QuantLib::OvernightIndex>& baseIndex,
+            const boost::shared_ptr<QuantLib::IborIndex>& otherIndex,
+            const QuantLib::Handle<QuantLib::YieldTermStructure>& discountHandle,
+            bool permanent);
+    };
+
+    class ConstNotionalCrossCurrencyBasisSwapRateHelper : public RateHelper {
+    public:
+        ConstNotionalCrossCurrencyBasisSwapRateHelper(
+            const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
+            const QuantLib::Handle<QuantLib::Quote>& basis,
+            const QuantLib::Period& tenor,
+            QuantLib::Natural fixingDays,
+            const QuantLib::Calendar& calendar,
+            QuantLib::BusinessDayConvention convention,
+            bool endOfMonth,
+            const boost::shared_ptr<QuantLib::IborIndex>& baseCurrencyIndex,
+            const boost::shared_ptr<QuantLib::IborIndex>& quoteCurrencyIndex,
+            const QuantLib::Handle<QuantLib::YieldTermStructure>& collateralCurve,
+            bool isFxBaseCurrencyCollateralCurrency,
+            bool isBasisOnFxBaseCurrencyLeg,
+            bool permanent);
+    };
+
+    class MtMCrossCurrencyBasisSwapRateHelper : public RateHelper {
+    public:
+        MtMCrossCurrencyBasisSwapRateHelper(
+            const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
+            const QuantLib::Handle<QuantLib::Quote>& basis,
+            const QuantLib::Period& tenor,
+            QuantLib::Natural fixingDays,
+            const QuantLib::Calendar& calendar,
+            QuantLib::BusinessDayConvention convention,
+            bool endOfMonth,
+            const boost::shared_ptr<QuantLib::IborIndex>& baseCurrencyIndex,
+            const boost::shared_ptr<QuantLib::IborIndex>& quoteCurrencyIndex,
+            const QuantLib::Handle<QuantLib::YieldTermStructure>& collateralCurve,
+            bool isFxBaseCurrencyCollateralCurrency,
+            bool isBasisOnFxBaseCurrencyLeg,
+            bool isFxBaseCurrencyLegResettable,
             bool permanent);
     };
 
