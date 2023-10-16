@@ -87,5 +87,21 @@
       </ReturnValue>
     </Member>
 
+    <Member name='qlFraAmount' type='QuantLib::ForwardRateAgreement'>
+      <description>Returns the payoff of the FRA on the value date.</description>
+      <libraryFunction>amount</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+        <!--SupportedPlatform name='Cpp'/-->
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters/>
+      </ParameterList>
+      <ReturnValue>
+        <type>double</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+
   </Functions>
 </Category>
