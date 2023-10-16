@@ -71,7 +71,7 @@
       </ParameterList>
     </Constructor>
 
-    <Member name='qlFRAforwardRate' type='QuantLib::ForwardRateAgreement'>
+    <Member name='qlFraForwardRate' type='QuantLib::ForwardRateAgreement'>
       <description>Returns the relevant forward rate associated with the FRA term.</description>
       <libraryFunction>forwardRate</libraryFunction>
       <SupportedPlatforms>
@@ -87,7 +87,7 @@
       </ReturnValue>
     </Member>
 
-    <Member name='qlFRAforwardValue' type='QuantLib::ForwardRateAgreement'>
+    <Member name='qlFraForwardValue' type='QuantLib::ForwardRateAgreement'>
       <description>Returns the forward value of the FRA.</description>
       <libraryFunction>forwardValue</libraryFunction>
       <SupportedPlatforms>
@@ -103,7 +103,7 @@
       </ReturnValue>
     </Member>
 
-    <Member name='qlFRAspotValue' type='QuantLib::ForwardRateAgreement'>
+    <Member name='qlFraSpotValue' type='QuantLib::ForwardRateAgreement'>
       <description>Returns the spot value of the FRA.</description>
       <libraryFunction>spotValue</libraryFunction>
       <SupportedPlatforms>
