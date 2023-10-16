@@ -99,6 +99,9 @@
     <None Include="metadata\functions\couponvectors.xml">
       <Filter>functions</Filter>
     </None>
+    <None Include="metadata\functions\credit.xml">
+      <Filter>functions</Filter>
+    </None>
     <None Include="metadata\functions\date.xml">
       <Filter>functions</Filter>
     </None>
