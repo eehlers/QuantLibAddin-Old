@@ -30,6 +30,7 @@
 #include <ql/pricingengines/capfloor/bacheliercapfloorengine.hpp>
 #include <ql/pricingengines/swap/discountingswapengine.hpp>
 #include <ql/pricingengines/bond/discountingbondengine.hpp>
+#include <ql/pricingengines/bond/riskybondengine.hpp>
 #include <ql/processes/blackscholesprocess.hpp>
 #include <ql/pricingengines/swaption/jamshidianswaptionengine.hpp>
 #include <ql/pricingengines/swaption/treeswaptionengine.hpp>
@@ -209,6 +210,17 @@ namespace QuantLibAddin {
     {
         libraryObject_ = boost::shared_ptr<QuantLib::PricingEngine>(new
             QuantLib::DiscountingBondEngine(discountCurve));
+    }
+
+    RiskyBondEngine::RiskyBondEngine(
+        const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
+        const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& defaultProbabilityTermStructure,
+        const QuantLib::Real recoveryRate,
+        const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
+        bool permanent) : PricingEngine(properties, permanent)
+    {
+        libraryObject_ = boost::shared_ptr<QuantLib::PricingEngine>(new
+            QuantLib::RiskyBondEngine(defaultProbabilityTermStructure, recoveryRate, discountCurve));
     }
 
     JamshidianSwaptionEngine::JamshidianSwaptionEngine(
