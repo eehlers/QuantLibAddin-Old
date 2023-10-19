@@ -21,7 +21,10 @@
 #define xlsdk_autolink_hpp
 
 // select toolset:
-#if (_MSC_VER >= 1924)
+// https://cmake.org/cmake/help/latest/variable/MSVC_VERSION.html is useful to determine this
+#if (_MSC_VER >= 1930)
+#  define XLSDK_LIB_TOOLSET "v143"
+#elif (_MSC_VER >= 1920)
 #  define XLSDK_LIB_TOOLSET "v142"
 #elif (_MSC_VER >= 1910)
 #  define XLSDK_LIB_TOOLSET "v141"
