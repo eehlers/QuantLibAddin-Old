@@ -111,19 +111,6 @@ namespace QuantLibAddin {
             const QuantLib::Date& issueDate,
             const QuantLib::Calendar& paymentCalendar,
             bool permanent);
-        FixedRateBond(
-            const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
-            const std::string& des,
-            const QuantLib::Currency& cur,
-            QuantLib::Natural settlementDays,
-            QuantLib::Real faceAmount,
-            const boost::shared_ptr<QuantLib::Schedule>& schedule,
-            const std::vector<boost::shared_ptr<QuantLib::InterestRate> >& coupons,
-            QuantLib::BusinessDayConvention paymentConvention,
-            QuantLib::Real redemption,
-            const QuantLib::Date& issueDate,
-            const QuantLib::Calendar& paymentCalendar,
-            bool permanent);
       protected:
         FixedRateBond(
             const boost::shared_ptr<ObjectHandler::ValueObject>& properties,

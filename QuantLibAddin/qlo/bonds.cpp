@@ -208,47 +208,6 @@ namespace QuantLibAddin {
     }
 
     FixedRateBond::FixedRateBond(
-            const shared_ptr<ObjectHandler::ValueObject>& properties,
-            const string& des,
-            const QuantLib::Currency& cur,
-            QuantLib::Natural settlementDays,
-            QuantLib::Real faceAmount,
-            const shared_ptr<QuantLib::Schedule>& schedule,
-            const vector<shared_ptr<QuantLib::InterestRate> >& coupons,
-            QuantLib::BusinessDayConvention paymentConvention,
-            QuantLib::Real redemption,
-            const Date& issueDate,
-            const QuantLib::Calendar& paymentCalendar,
-            bool permanent)
-    : Bond(properties, des, cur, permanent)
-    {
-		vector<QuantLib::InterestRate> couponRate(coupons.size());
-
-		for (Size i=0; i<coupons.size(); ++i)
-			couponRate[i] = *coupons[i];
-
-        qlBondObject_ = shared_ptr<QuantLib::FixedRateBond>(new
-            QuantLib::FixedRateBond(settlementDays, faceAmount,
-                                    *schedule,
-                                    couponRate,
-                                    paymentConvention,
-									redemption,
-                                    issueDate,
-                                    paymentCalendar));
-        libraryObject_ = qlBondObject_;
-        if (description_.empty()) {
-            std::ostringstream temp;
-            temp << "FixedRateBond ";
-            temp << QuantLib::io::iso_date(qlBondObject_->maturityDate());
-            if (couponRate.size()==1)
-                temp << " " << coupons[0]->rate()*100.0 << "%";
-            else
-                temp << " STEP";
-            description_ = temp.str();
-        }
-    }
-
-    FixedRateBond::FixedRateBond(
             const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
             const std::string& des,
             const QuantLib::Currency& cur,
