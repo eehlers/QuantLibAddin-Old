@@ -11,6 +11,7 @@
     <include>qlo/processes.hpp</include>
     <include>ql/pricingengines/blackformula.hpp</include>
     <include>ql/pricingengines/blackscholescalculator.hpp</include>
+    <include>ql/termstructures/defaulttermstructure.hpp</include>
     <include>ql/termstructures/volatility/optionlet/optionletvolatilitystructure.hpp</include>
     <include>ql/termstructures/volatility/swaption/swaptionvolstructure.hpp</include>
     <include>ql/pricingengines/swaption/jamshidianswaptionengine.hpp</include>
@@ -26,6 +27,7 @@
     <include>qlo/processes.hpp</include>
     <include>ql/pricingengines/blackformula.hpp</include>
     <include>ql/pricingengines/blackscholescalculator.hpp</include>
+    <include>ql/termstructures/defaulttermstructure.hpp</include>
     <include>ql/termstructures/volatility/optionlet/optionletvolatilitystructure.hpp</include>
     <include>ql/termstructures/volatility/swaption/swaptionvolstructure.hpp</include>
     <include>ql/pricingengines/swaption/jamshidianswaptionengine.hpp</include>
@@ -1544,6 +1546,37 @@
             <superType>libToHandle</superType>
             <tensorRank>scalar</tensorRank>
             <description>discounting yield term structure object ID.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+    </Constructor>
+
+    <Constructor name='qlRiskyBondEngine'>
+      <libraryFunction>RiskyBondEngine</libraryFunction>
+      <SupportedPlatforms>
+        <!--SupportedPlatform name='Excel' calcInWizard='false'/-->
+        <SupportedPlatform name='Excel'/>
+        <SupportedPlatform name='Calc'/>
+        <SupportedPlatform name='Cpp'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <Parameter name='DefaultCurve'>
+            <type>QuantLib::DefaultProbabilityTermStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>default term structure object ID.</description>
+          </Parameter>
+          <Parameter name='Recovery'>
+            <type>double</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Recovery Rate.</description>
+          </Parameter>
+          <Parameter name='DiscountingCurve'>
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>discounting YieldTermStructure object ID.</description>
           </Parameter>
         </Parameters>
       </ParameterList>

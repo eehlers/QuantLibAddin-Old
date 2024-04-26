@@ -71,7 +71,7 @@
       </ParameterList>
     </Constructor>
 
-    <Member name='qlFRAforwardRate' type='QuantLib::ForwardRateAgreement'>
+    <Member name='qlFraForwardRate' type='QuantLib::ForwardRateAgreement'>
       <description>Returns the relevant forward rate associated with the FRA term.</description>
       <libraryFunction>forwardRate</libraryFunction>
       <SupportedPlatforms>
@@ -87,25 +87,9 @@
       </ReturnValue>
     </Member>
 
-    <Member name='qlFRAforwardValue' type='QuantLib::ForwardRateAgreement'>
-      <description>Returns the forward value of the FRA.</description>
-      <libraryFunction>forwardValue</libraryFunction>
-      <SupportedPlatforms>
-        <SupportedPlatform name='Excel'/>
-        <!--SupportedPlatform name='Cpp'/-->
-      </SupportedPlatforms>
-      <ParameterList>
-        <Parameters/>
-      </ParameterList>
-      <ReturnValue>
-        <type>double</type>
-        <tensorRank>scalar</tensorRank>
-      </ReturnValue>
-    </Member>
-
-    <Member name='qlFRAspotValue' type='QuantLib::ForwardRateAgreement'>
-      <description>Returns the spot value of the FRA.</description>
-      <libraryFunction>spotValue</libraryFunction>
+    <Member name='qlFraAmount' type='QuantLib::ForwardRateAgreement'>
+      <description>Returns the payoff of the FRA on the value date.</description>
+      <libraryFunction>amount</libraryFunction>
       <SupportedPlatforms>
         <SupportedPlatform name='Excel'/>
         <!--SupportedPlatform name='Cpp'/-->

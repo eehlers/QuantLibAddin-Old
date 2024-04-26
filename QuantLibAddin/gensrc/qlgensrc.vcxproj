@@ -83,6 +83,7 @@
     <None Include="metadata\functions\cmsmarket.xml" />
     <None Include="metadata\functions\cmsmarketcalibration.xml" />
     <None Include="metadata\functions\couponvectors.xml" />
+    <None Include="metadata\functions\credit.xml" />
     <None Include="metadata\functions\date.xml" />
     <None Include="metadata\functions\daycounter.xml" />
     <None Include="metadata\functions\defaultbasket.xml" />

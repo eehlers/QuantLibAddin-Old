@@ -44,6 +44,7 @@ namespace QuantLib {
     class PricingEngine;
     class Quote;
     class YieldTermStructure;
+    class DefaultProbabilityTermStructure;
     class DayCounter;
     class DiscountingBondEngine;
     class DiscountingSwapEngine;
@@ -197,6 +198,16 @@ namespace QuantLibAddin {
       public:
           BondEngine(
             const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
+            const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
+            bool permanent);
+    };
+
+    class RiskyBondEngine : public PricingEngine {
+    public:
+        RiskyBondEngine(
+            const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
+            const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& defaultProbabilityTermStructure,
+            const QuantLib::Real recoveryRate,
             const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
             bool permanent);
     };
