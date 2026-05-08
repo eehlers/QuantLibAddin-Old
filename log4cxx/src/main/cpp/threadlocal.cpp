@@ -19,42 +19,56 @@
 #include "apr_thread_proc.h"
 #include "log4cxx/helpers/exception.h"
 
-using namespace log4cxx::helpers;
-using namespace log4cxx;
+using namespace LOG4CXX_NS::helpers;
+using namespace LOG4CXX_NS;
 
-apr_threadkey_t* ThreadLocal::create(Pool& p) {
-    apr_threadkey_t* key = 0;
+apr_threadkey_t* ThreadLocal::create(Pool& p)
+{
+	apr_threadkey_t* key = 0;
 #if APR_HAS_THREADS
-    apr_status_t stat = apr_threadkey_private_create(&key, 0, p.getAPRPool());
-    if (stat != APR_SUCCESS) {
-         throw RuntimeException(stat);
-    }
+	apr_status_t stat = apr_threadkey_private_create(&key, 0, p.getAPRPool());
+
+	if (stat != APR_SUCCESS)
+	{
+		throw RuntimeException(stat);
+	}
+
 #endif
-    return key;
+	return key;
 }
 
-ThreadLocal::ThreadLocal() : p(), key(create(p)) {
+ThreadLocal::ThreadLocal() : p(), key(create(p))
+{
 }
-              
-ThreadLocal::~ThreadLocal() {
+
+ThreadLocal::~ThreadLocal()
+{
 }
-              
-void ThreadLocal::set(void* priv) {
+
+void ThreadLocal::set(void* priv)
+{
 #if APR_HAS_THREADS
-    apr_status_t stat = apr_threadkey_private_set(priv, key);
-    if (stat != APR_SUCCESS) {
-        throw RuntimeException(stat);
-    }
+	apr_status_t stat = apr_threadkey_private_set(priv, key);
+
+	if (stat != APR_SUCCESS)
+	{
+		throw RuntimeException(stat);
+	}
+
 #endif
 }
-               
-void* ThreadLocal::get() {
-    void* retval = 0;
+
+void* ThreadLocal::get()
+{
+	void* retval = 0;
 #if APR_HAS_THREADS
-    apr_status_t stat = apr_threadkey_private_get(&retval, key);
-    if (stat != APR_SUCCESS) {
-        throw RuntimeException(stat);
-    }
+	apr_status_t stat = apr_threadkey_private_get(&retval, key);
+
+	if (stat != APR_SUCCESS)
+	{
+		throw RuntimeException(stat);
+	}
+
 #endif
-    return retval;
+	return retval;
 }

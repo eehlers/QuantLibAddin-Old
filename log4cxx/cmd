@@ -1,1 +1,0 @@
-./configure --prefix=$IDIR --with-apr=$IDIR --with-apr-util=$IDIR

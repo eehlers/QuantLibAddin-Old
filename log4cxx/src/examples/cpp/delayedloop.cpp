@@ -20,6 +20,7 @@
 #include <log4cxx/propertyconfigurator.h>
 #include <apr_general.h>
 #include <apr_time.h>
+#include <apr.h>
 #include <iostream>
 #include <log4cxx/stream.h>
 #include <exception>
@@ -67,19 +68,11 @@ public:
                 if(configFile.length() > 4 &&
                      configFile.substr(configFile.length() - 4) == ".xml")
                 {
-#if APR_HAS_THREADS
-               xml::DOMConfigurator::configureAndWatch(configFile, 3000);
-#else
-               xml::DOMConfigurator::configure(configFile);
-#endif
+                        xml::DOMConfigurator::configureAndWatch(configFile, 3000);
                 }
                 else
                 {
-#if APR_HAS_THREADS
                         PropertyConfigurator::configureAndWatch(configFile, 3000);
-#else
-                        PropertyConfigurator::configure(configFile);
-#endif
                 }
         }
 
@@ -93,7 +86,7 @@ public:
                         {
                                 apr_sleep(1000000);
                         }
-                        catch(std::exception& e)
+                        catch(std::exception&)
                         {
                         }
                 }

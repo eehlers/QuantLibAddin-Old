@@ -1,0 +1,228 @@
+<Category name='fxforward'>
+  <description>Functions to construct and use FxForward instruments and the DiscountingFxForwardEngine.</description>
+  <displayName>FX Forward</displayName>
+  <xlFunctionWizardCategory>QuantLib - Financial</xlFunctionWizardCategory>
+  <serializationIncludes>
+    <include>qlo/fxforward.hpp</include>
+    <include>qlo/quote.hpp</include>
+    <include>qlo/yieldtermstructures.hpp</include>
+    <include>ql/instruments/fxforward.hpp</include>
+    <include>ql/pricingengines/forward/discountingfxforwardengine.hpp</include>
+  </serializationIncludes>
+  <addinIncludes>
+    <include>qlo/fxforward.hpp</include>
+    <include>qlo/quote.hpp</include>
+    <include>qlo/yieldtermstructures.hpp</include>
+    <include>ql/instruments/fxforward.hpp</include>
+    <include>ql/pricingengines/forward/discountingfxforwardengine.hpp</include>
+  </addinIncludes>
+  <copyright>
+    Copyright (C) 2026
+  </copyright>
+  <Functions>
+
+    <Constructor name='qlFxForward'>
+      <libraryFunction>FxForward</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+        <SupportedPlatform name='Cpp'/>
+      </SupportedPlatforms>
+      <processorName>InstrumentProcessor</processorName>
+      <ParameterList>
+        <Parameters>
+          <Parameter name='SourceNominal' exampleValue='1000000'>
+            <type>double</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Notional amount in source (domestic) currency.</description>
+          </Parameter>
+          <Parameter name='SourceCurrency' exampleValue='USD'>
+            <type>QuantLib::Currency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Source currency (e.g. USD).</description>
+          </Parameter>
+          <Parameter name='TargetNominal' exampleValue='920000'>
+            <type>double</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Notional amount in target (foreign) currency.</description>
+          </Parameter>
+          <Parameter name='TargetCurrency' exampleValue='EUR'>
+            <type>QuantLib::Currency</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Target currency (e.g. EUR).</description>
+          </Parameter>
+          <Parameter name='MaturityDate' exampleValue='1Y'>
+            <type>QuantLib::Date</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Settlement / maturity date of the forward contract.</description>
+          </Parameter>
+          <Parameter name='PaySourceCurrency' exampleValue='true'>
+            <type>bool</type>
+            <tensorRank>scalar</tensorRank>
+            <description>TRUE to pay source currency and receive target currency; FALSE for the opposite.</description>
+          </Parameter>
+          <Parameter name='SettlementDays' default='2'>
+            <type>long</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Number of business days for payment settlement (0=O/N, 1=T/N, 2=Spot).</description>
+          </Parameter>
+          <Parameter name='PaymentCalendar' default='"NullCalendar"'>
+            <type>QuantLib::Calendar</type>
+            <tensorRank>scalar</tensorRank>
+            <description>Calendar used to advance the settlement date.</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+    </Constructor>
+
+    <Member name='qlFxForwardSourceNominal' type='QuantLib::FxForward'>
+      <description>Returns the source currency nominal of the FX forward.</description>
+      <libraryFunction>sourceNominal</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters/>
+      </ParameterList>
+      <ReturnValue>
+        <type>double</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+
+    <Member name='qlFxForwardTargetNominal' type='QuantLib::FxForward'>
+      <description>Returns the target currency nominal of the FX forward.</description>
+      <libraryFunction>targetNominal</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters/>
+      </ParameterList>
+      <ReturnValue>
+        <type>double</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+
+    <Member name='qlFxForwardContractedRate' type='QuantLib::FxForward'>
+      <description>Returns the contracted forward rate (target per unit of source).</description>
+      <libraryFunction>forwardRate</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters/>
+      </ParameterList>
+      <ReturnValue>
+        <type>double</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+
+    <Member name='qlFxForwardFairForwardRate' type='QuantLib::FxForward'>
+      <description>Returns the fair forward rate computed by the pricing engine (target/source).</description>
+      <libraryFunction>fairForwardRate</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters/>
+      </ParameterList>
+      <ReturnValue>
+        <type>double</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+
+    <Member name='qlFxForwardNPVSourceCurrency' type='QuantLib::FxForward'>
+      <description>Returns the NPV expressed in source currency terms.</description>
+      <libraryFunction>npvSourceCurrency</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters/>
+      </ParameterList>
+      <ReturnValue>
+        <type>double</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+
+    <Member name='qlFxForwardNPVTargetCurrency' type='QuantLib::FxForward'>
+      <description>Returns the NPV expressed in target currency terms.</description>
+      <libraryFunction>npvTargetCurrency</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters/>
+      </ParameterList>
+      <ReturnValue>
+        <type>double</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+
+    <Member name='qlFxForwardMaturityDate' type='QuantLib::FxForward'>
+      <description>Returns the maturity date of the FX forward contract.</description>
+      <libraryFunction>maturityDate</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters/>
+      </ParameterList>
+      <ReturnValue>
+        <type>QuantLib::Date</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+
+    <Member name='qlFxForwardSettlementDate' type='QuantLib::FxForward'>
+      <description>Returns the payment settlement date (evaluation date + settlementDays business days).</description>
+      <libraryFunction>settlementDate</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters/>
+      </ParameterList>
+      <ReturnValue>
+        <type>QuantLib::Date</type>
+        <tensorRank>scalar</tensorRank>
+      </ReturnValue>
+    </Member>
+
+    <Constructor name='qlDiscountingFxForwardEngine'>
+      <libraryFunction>DiscountingFxForwardEngine</libraryFunction>
+      <SupportedPlatforms>
+        <SupportedPlatform name='Excel'/>
+        <SupportedPlatform name='Cpp'/>
+      </SupportedPlatforms>
+      <ParameterList>
+        <Parameters>
+          <Parameter name='SourceCcyDiscountCurve'>
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>Discount curve for the source currency.</description>
+          </Parameter>
+          <Parameter name='TargetCcyDiscountCurve'>
+            <type>QuantLib::YieldTermStructure</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>Discount curve for the target currency.</description>
+          </Parameter>
+          <Parameter name='SpotFx'>
+            <type>QuantLib::Quote</type>
+            <superType>libToHandle</superType>
+            <tensorRank>scalar</tensorRank>
+            <description>Spot FX rate quote (target currency per unit of source currency).</description>
+          </Parameter>
+        </Parameters>
+      </ParameterList>
+    </Constructor>
+
+  </Functions>
+</Category>

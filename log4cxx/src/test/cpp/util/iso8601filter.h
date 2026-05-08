@@ -20,13 +20,13 @@
 
 #include "filter.h"
 
-namespace log4cxx
+namespace LOG4CXX_NS
 {
-   class ISO8601Filter : public Filter
-   {
-   public:
-       ISO8601Filter();
-   };
+class ISO8601Filter : public Filter
+{
+	public:
+		ISO8601Filter();
+};
 }
 
 

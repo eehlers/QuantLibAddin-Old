@@ -14,9 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(_MSC_VER)
-#pragma warning ( disable: 4231 4251 4275 4786 )
-#endif
 
 #include <log4cxx/logstring.h>
 #include <log4cxx/pattern/levelpatternconverter.h>
@@ -25,63 +22,70 @@
 #include <log4cxx/level.h>
 
 
-using namespace log4cxx;
-using namespace log4cxx::pattern;
-using namespace log4cxx::spi;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::pattern;
+using namespace LOG4CXX_NS::spi;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(LevelPatternConverter)
 
 LevelPatternConverter::LevelPatternConverter() :
-   LoggingEventPatternConverter(LOG4CXX_STR("Level"),
-      LOG4CXX_STR("level")) {
+	LoggingEventPatternConverter(LOG4CXX_STR("Level"),
+		LOG4CXX_STR("level"))
+{
 }
 
 PatternConverterPtr LevelPatternConverter::newInstance(
-   const std::vector<LogString>& /* options */) {
-   static PatternConverterPtr def(new LevelPatternConverter());
-   return def;
+	const std::vector<LogString>& /* options */)
+{
+	static WideLife<PatternConverterPtr> def = std::make_shared<LevelPatternConverter>();
+	return def;
 }
 
 void LevelPatternConverter::format(
-  const LoggingEventPtr& event,
-  LogString& toAppendTo,
-  log4cxx::helpers::Pool& /* p */) const {
-   toAppendTo.append(event->getLevel()->toString());
- }
+	const LoggingEventPtr& event,
+	LogString& toAppendTo,
+	LOG4CXX_NS::helpers::Pool& /* p */) const
+{
+	toAppendTo.append(event->getLevel()->toString());
+}
 
 
-  /**
-   * {@inheritDoc}
-   */
-LogString LevelPatternConverter::getStyleClass(const ObjectPtr& obj) const {
-    LoggingEventPtr e(obj);
-    if (e != NULL) {
-      int lint = e->getLevel()->toInt();
+/**
+ * {@inheritDoc}
+ */
+LogString LevelPatternConverter::getStyleClass(const ObjectPtr& obj) const
+{
+	LoggingEventPtr e = LOG4CXX_NS::cast<LoggingEvent>(obj);
 
-      switch (lint) {
-      case Level::TRACE_INT:
-        return LOG4CXX_STR("level trace");
+	if (e != NULL)
+	{
+		int lint = e->getLevel()->toInt();
 
-      case Level::DEBUG_INT:
-        return LOG4CXX_STR("level debug");
+		switch (lint)
+		{
+			case Level::TRACE_INT:
+				return LOG4CXX_STR("level trace");
 
-      case Level::INFO_INT:
-        return LOG4CXX_STR("level info");
+			case Level::DEBUG_INT:
+				return LOG4CXX_STR("level debug");
 
-      case Level::WARN_INT:
-        return LOG4CXX_STR("level warn");
+			case Level::INFO_INT:
+				return LOG4CXX_STR("level info");
 
-      case Level::ERROR_INT:
-        return LOG4CXX_STR("level error");
+			case Level::WARN_INT:
+				return LOG4CXX_STR("level warn");
 
-      case Level::FATAL_INT:
-        return LOG4CXX_STR("level fatal");
+			case Level::ERROR_INT:
+				return LOG4CXX_STR("level error");
 
-      default:
-        return LogString(LOG4CXX_STR("level ")) + e->getLevel()->toString();
-      }
-    }
+			case Level::FATAL_INT:
+				return LOG4CXX_STR("level fatal");
 
-    return LOG4CXX_STR("level");
-  }
+			default:
+				return LogString(LOG4CXX_STR("level ")) + e->getLevel()->toString();
+		}
+	}
+
+	return LOG4CXX_STR("level");
+}

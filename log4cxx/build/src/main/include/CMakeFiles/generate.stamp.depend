@@ -1,0 +1,12 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckCXXSymbolExists.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckFunctionExists.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckIncludeFileCXX.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckSymbolExists.cmake
+C:/Scratch/ql/log4cxx/src/cmake/boost-fallback/boost-std-configuration.h.cmake
+C:/Scratch/ql/log4cxx/src/cmake/compiler-features/makeunique.h.cmake
+C:/Scratch/ql/log4cxx/src/main/include/CMakeLists.txt
+C:/Scratch/ql/log4cxx/src/main/include/log4cxx/log4cxx.h.in
+C:/Scratch/ql/log4cxx/src/main/include/log4cxx/private/log4cxx_private.h.in
+C:/Scratch/ql/log4cxx/src/main/include/log4cxx/version_info.h.in

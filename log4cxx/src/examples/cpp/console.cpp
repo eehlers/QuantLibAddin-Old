@@ -15,34 +15,31 @@
  * limitations under the License.
  */
 
-#include <stdlib.h>
 #include <log4cxx/logger.h>
 #include <log4cxx/consoleappender.h>
 #include <log4cxx/simplelayout.h>
 #include <log4cxx/logmanager.h>
-#include <iostream>
-#include <locale.h>
+#include <locale>
+#include <cstdio>
 #include <cstring>
-#include <stdio.h>
-
-using namespace log4cxx;
-using namespace log4cxx::helpers;
+#include <iostream>
 
 /**
  *   Configures console appender.
  *   @param err if true, use stderr, otherwise stdout.
  */
-static void configure(bool err) {
-    log4cxx::ConsoleAppenderPtr appender(new log4cxx::ConsoleAppender());
-    if (err) {
-        appender->setTarget(LOG4CXX_STR("System.err"));
-    }
-    log4cxx::LayoutPtr layout(new log4cxx::SimpleLayout());
-    appender->setLayout(layout);
-    log4cxx::helpers::Pool pool;
-    appender->activateOptions(pool);
-    log4cxx::Logger::getRootLogger()->addAppender(appender);
-    LogManager::getLoggerRepository()->setConfigured(true);
+static void configure(bool err)
+{
+    using namespace log4cxx;
+    auto r = LogManager::getLoggerRepository();
+    r->ensureIsConfigured([r,err]() {
+        auto appender = std::make_shared<ConsoleAppender>
+            ( std::make_shared<SimpleLayout>()
+            , err ? ConsoleAppender::getSystemErr() : ConsoleAppender::getSystemOut()
+            );
+        r->getRootLogger()->addAppender(appender);
+        r->setConfigured(true);
+    });
 }
 
 /**

@@ -16,6 +16,8 @@
  */
 #define LOG4CXX_TEST
 #include <log4cxx/private/log4cxx_private.h>
+#include "log4cxx/helpers/loglog.h"
+#include "log4cxx/helpers/transcoder.h"
 #if LOG4CXX_HAS_STD_LOCALE
 
 #include "localechanger.h"
@@ -27,24 +29,35 @@ using namespace log4cxx::helpers;
 *   Construction attemtps to change default locale.
 * @param locale locale.
 */
-LocaleChanger::LocaleChanger(const char* locale) {
-    effective = false;
-    try {
-        std::locale newLocale(locale);
-        initial = std::locale::global(newLocale);
-        effective = true;
-    } catch(std::runtime_error&) {
-    } catch(std::exception&) {
-    }
-  }
+LocaleChanger::LocaleChanger(const char* locale)
+{
+	effective = false;
+
+	try
+	{
+		std::locale newLocale(locale);
+		initial = std::locale::global(newLocale);
+		effective = true;
+	}
+	catch (std::exception& ex)
+	{
+		LOG4CXX_DECODE_CHAR(lsMsg, ex.what());
+		LogString errorMsg;
+		errorMsg.append(lsMsg);
+		errorMsg.append(LOG4CXX_STR(" - in LocaleChanger"));
+		LogLog::warn(errorMsg);
+	}
+}
 
 /**
 * Restores previous locale.
 */
-LocaleChanger::~LocaleChanger() {
-      if (effective) {
-        std::locale::global(initial);
-      }
-  }
+LocaleChanger::~LocaleChanger()
+{
+	if (effective)
+	{
+		std::locale::global(initial);
+	}
+}
 
 #endif

@@ -14,37 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(_MSC_VER)
-#pragma warning ( disable: 4231 4251 4275 4786 )
-#endif
-
-
 #include <log4cxx/logstring.h>
 #include <log4cxx/pattern/filelocationpatternconverter.h>
 #include <log4cxx/spi/loggingevent.h>
 #include <log4cxx/spi/location/locationinfo.h>
 
- using namespace log4cxx;
- using namespace log4cxx::pattern;
- using namespace log4cxx::spi;
- using namespace helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::pattern;
+using namespace LOG4CXX_NS::spi;
+using namespace helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(FileLocationPatternConverter)
 
 FileLocationPatternConverter::FileLocationPatternConverter() :
-    LoggingEventPatternConverter(LOG4CXX_STR("File Location"),
-       LOG4CXX_STR("file")) {
+	LoggingEventPatternConverter(LOG4CXX_STR("File Location"),
+		LOG4CXX_STR("file"))
+{
 }
 
 PatternConverterPtr FileLocationPatternConverter::newInstance(
-    const std::vector<LogString>& /* options */ ) {
-    static PatternConverterPtr instance(new FileLocationPatternConverter());
-    return instance;
+	const std::vector<LogString>& /* options */ )
+{
+	static WideLife<PatternConverterPtr> instance = std::make_shared<FileLocationPatternConverter>();
+	return instance;
 }
 
 void FileLocationPatternConverter::format(
-   const LoggingEventPtr& event,
-   LogString& toAppendTo,
-   Pool& /* p */ ) const {
-    append(toAppendTo, event->getLocationInformation().getFileName());
+	const LoggingEventPtr& event,
+	LogString& toAppendTo,
+	Pool& /* p */ ) const
+{
+	append(toAppendTo, event->getLocationInformation().getFileName());
 }

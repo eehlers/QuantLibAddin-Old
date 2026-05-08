@@ -17,24 +17,24 @@
 
 #include <log4cxx/spi/defaultrepositoryselector.h>
 
-using namespace log4cxx;
-using namespace log4cxx::spi;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::spi;
+using namespace LOG4CXX_NS::helpers;
 
+struct DefaultRepositorySelector::DefaultRepositorySelectorPrivate
+{
+	LoggerRepositoryPtr repository;
+};
 
-DefaultRepositorySelector::DefaultRepositorySelector(const LoggerRepositoryPtr& repository1)
-     : repository(repository1) {
+DefaultRepositorySelector::DefaultRepositorySelector(const LoggerRepositoryPtr repository1)
+	: m_priv(std::make_unique<DefaultRepositorySelectorPrivate>())
+{
+	m_priv->repository = repository1;
 }
 
-void DefaultRepositorySelector::addRef() const { 
-    ObjectImpl::addRef(); 
-}
+DefaultRepositorySelector::~DefaultRepositorySelector() {}
 
-
-void DefaultRepositorySelector::releaseRef() const { 
-    ObjectImpl::releaseRef(); 
-}
-
-LoggerRepositoryPtr& DefaultRepositorySelector::getLoggerRepository() {
-    return repository;
+LoggerRepositoryPtr DefaultRepositorySelector::getLoggerRepository()
+{
+	return m_priv->repository;
 }

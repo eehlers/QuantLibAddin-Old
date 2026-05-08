@@ -19,24 +19,28 @@
 #include <log4cxx/helpers/stringhelper.h>
 #include <log4cxx/helpers/optionconverter.h>
 
-using namespace log4cxx;
-using namespace log4cxx::rolling;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::rolling;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(ManualTriggeringPolicy)
 
-ManualTriggeringPolicy::ManualTriggeringPolicy() {
+ManualTriggeringPolicy::ManualTriggeringPolicy()
+{
 }
 
 bool ManualTriggeringPolicy::isTriggeringEvent(Appender* /* appender */,
-          const log4cxx::spi::LoggingEventPtr& /* event */,
-          const LogString& /* file */,
-          size_t /* fileLength */ ) {
-  return false;
+	const LOG4CXX_NS::spi::LoggingEventPtr& /* event */,
+	const LogString& /* file */,
+	size_t /* fileLength */ )
+{
+	return false;
 }
 
-void ManualTriggeringPolicy::activateOptions(Pool& /* p */ ) {
+void ManualTriggeringPolicy::activateOptions(Pool& /* p */ )
+{
 }
 
-void ManualTriggeringPolicy::setOption(const LogString& /* option */ , const LogString& /* value */ ) {
+void ManualTriggeringPolicy::setOption(const LogString& /* option */, const LogString& /* value */ )
+{
 }

@@ -20,13 +20,13 @@
 
 #include "filter.h"
 
-namespace log4cxx
+namespace LOG4CXX_NS
 {
-   class AbsoluteTimeFilter : public Filter
-   {
-   public:
-       AbsoluteTimeFilter();
-   };
+class AbsoluteTimeFilter : public Filter
+{
+	public:
+		AbsoluteTimeFilter();
+};
 }
 
 

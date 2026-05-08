@@ -14,36 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(_MSC_VER)
-#pragma warning ( disable: 4231 4251 4275 4786 )
-#endif
 
 #include <log4cxx/logstring.h>
 #include <log4cxx/pattern/loggingeventpatternconverter.h>
 #include <log4cxx/spi/loggingevent.h>
+#include <log4cxx/private/patternconverter_priv.h>
 
-using namespace log4cxx;
-using namespace log4cxx::pattern;
-using namespace log4cxx::spi;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::pattern;
+using namespace LOG4CXX_NS::spi;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(LoggingEventPatternConverter)
 
 
 
 LoggingEventPatternConverter::LoggingEventPatternConverter(
-    const LogString& name1, const LogString& style1) : PatternConverter(name1, style1) {
-  }
-
-void LoggingEventPatternConverter::format(const ObjectPtr& obj,
-    LogString& output,
-    log4cxx::helpers::Pool& p) const {
-    LoggingEventPtr le(obj);
-    if (le != NULL) {
-       format(le, output, p);
-    }
+	const LogString& name1, const LogString& style1) : PatternConverter(name1, style1)
+{
 }
 
-bool LoggingEventPatternConverter::handlesThrowable() const {
-    return false;
+LoggingEventPatternConverter::LoggingEventPatternConverter(std::unique_ptr<PatternConverterPrivate> priv) :
+	PatternConverter (std::move(priv))
+{
+
+}
+
+void LoggingEventPatternConverter::format(const ObjectPtr& obj,
+	LogString& output,
+	LOG4CXX_NS::helpers::Pool& p) const
+{
+	LoggingEventPtr le = LOG4CXX_NS::cast<LoggingEvent>(obj);
+
+	if (le != NULL)
+	{
+		format(le, output, p);
+	}
+}
+
+bool LoggingEventPatternConverter::handlesThrowable() const
+{
+	return false;
 }

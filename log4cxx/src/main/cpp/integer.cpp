@@ -18,17 +18,20 @@
 #include <log4cxx/logstring.h>
 #include <log4cxx/helpers/integer.h>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(Integer)
 
 
-Integer::Integer() : val(0){
+Integer::Integer() : val(0)
+{
 }
 
-Integer::Integer(int val1) : val(val1) {
+Integer::Integer(int val1) : val(val1)
+{
 }
 
-Integer::~Integer() {
+Integer::~Integer()
+{
 }

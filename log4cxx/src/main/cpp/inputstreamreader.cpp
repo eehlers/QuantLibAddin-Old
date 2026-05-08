@@ -20,56 +20,85 @@
 #include <log4cxx/helpers/exception.h>
 #include <log4cxx/helpers/pool.h>
 #include <log4cxx/helpers/bytebuffer.h>
+
+#include <cstdio>
 #include <cstring>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(InputStreamReader)
 
+struct InputStreamReader::InputStreamReaderPrivate{
+	InputStreamReaderPrivate(const InputStreamPtr& in1) :
+		in(in1), dec(CharsetDecoder::getDefaultDecoder()){}
+
+	InputStreamReaderPrivate(const InputStreamPtr& in1, const CharsetDecoderPtr& dec1) :
+		in(in1), dec(dec1) {}
+
+	InputStreamPtr in;
+	CharsetDecoderPtr dec;
+};
+
 InputStreamReader::InputStreamReader(const InputStreamPtr& in1)
-   : in(in1), dec(CharsetDecoder::getDefaultDecoder()) {
-   if (in1 == 0) {
-      throw NullPointerException(LOG4CXX_STR("in parameter may not be null."));
-   }
+	: m_priv(std::make_unique<InputStreamReaderPrivate>(in1))
+{
+	if (in1 == 0)
+	{
+		throw NullPointerException(LOG4CXX_STR("in parameter may not be null."));
+	}
 }
 
-InputStreamReader::InputStreamReader(const InputStreamPtr& in1, const CharsetDecoderPtr &dec1) 
-    : in(in1), dec(dec1) {
-    if (in1 == 0) {
-       throw NullPointerException(LOG4CXX_STR("in parameter may not be null."));
-    }
-    if (dec1 == 0) {
-       throw NullPointerException(LOG4CXX_STR("dec parameter may not be null."));
-    }
+InputStreamReader::InputStreamReader(const InputStreamPtr& in1, const CharsetDecoderPtr& dec1)
+	: m_priv(std::make_unique<InputStreamReaderPrivate>(in1, dec1))
+{
+	if (in1 == 0)
+	{
+		throw NullPointerException(LOG4CXX_STR("in parameter may not be null."));
+	}
+
+	if (dec1 == 0)
+	{
+		throw NullPointerException(LOG4CXX_STR("dec parameter may not be null."));
+	}
 }
 
-InputStreamReader::~InputStreamReader() {
+InputStreamReader::~InputStreamReader()
+{
 }
 
-void InputStreamReader::close(Pool& ) {
-  in->close();
+void InputStreamReader::close(Pool& )
+{
+	m_priv->in->close();
 }
 
-LogString InputStreamReader::read(Pool& p) {
-    const size_t BUFSIZE = 4096;
-    ByteBuffer buf(p.pstralloc(BUFSIZE), BUFSIZE);
-    LogString output;
+LogString InputStreamReader::read(Pool& p)
+{
+	const size_t BUFSIZE = 4096;
+	ByteBuffer buf(p.pstralloc(BUFSIZE), BUFSIZE);
+	LogString output;
 
-    // read whole file
-    while(in->read(buf) >= 0) {
-         buf.flip();
-         log4cxx_status_t stat = dec->decode(buf, output);
-         if (stat != 0) {
-             throw IOException(stat);
-         }
-         if (buf.remaining() > 0) {
-             memmove(buf.data(), buf.current(), buf.remaining());
-             buf.limit(buf.remaining());
-         } else {
-             buf.clear();
-         }
-    }
+	// read whole file
+	while (m_priv->in->read(buf) >= 0)
+	{
+		buf.flip();
+		log4cxx_status_t stat = m_priv->dec->decode(buf, output);
 
-    return output;
+		if (stat != 0)
+		{
+			throw IOException(LOG4CXX_STR("decode"), stat);
+		}
+
+		if (buf.remaining() > 0)
+		{
+			memmove(buf.data(), buf.current(), buf.remaining());
+			buf.limit(buf.remaining());
+		}
+		else
+		{
+			buf.clear();
+		}
+	}
+
+	return output;
 }

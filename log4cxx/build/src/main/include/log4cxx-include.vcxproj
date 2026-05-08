@@ -1,0 +1,510 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B5764B7F-D701-3CBE-8304-074520D493FB}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <VcpkgEnabled>false</VcpkgEnabled>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>log4cxx-include</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="do_not_import_user.props" Condition="exists('do_not_import_user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Scratch\ql\log4cxx\build\src\main\include\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">log4cxx-include.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">log4cxx-include</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Scratch\ql\log4cxx\build\src\main\include\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">log4cxx-include.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">log4cxx-include</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Scratch\ql\log4cxx\build\src\main\include\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">log4cxx-include.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">log4cxx-include</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Scratch\ql\log4cxx\build\src\main\include\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">log4cxx-include.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">log4cxx-include</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Scratch\ql\log4cxx\src\main\include\.;C:\Scratch\ql\log4cxx\build\src\main\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Scratch\ql\log4cxx\src\main\include\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Scratch/ql/log4cxx/src/main/include/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Scratch/ql/log4cxx -BC:/Scratch/ql/log4cxx/build --check-stamp-file C:/Scratch/ql/log4cxx/build/src/main/include/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCXXSymbolExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckFunctionExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckSymbolExists.cmake;C:\Scratch\ql\log4cxx\src\cmake\boost-fallback\boost-std-configuration.h.cmake;C:\Scratch\ql\log4cxx\src\cmake\compiler-features\makeunique.h.cmake;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\log4cxx.h.in;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\log4cxx_private.h.in;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\version_info.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Scratch\ql\log4cxx\build\src\main\include\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Scratch/ql/log4cxx/src/main/include/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Scratch/ql/log4cxx -BC:/Scratch/ql/log4cxx/build --check-stamp-file C:/Scratch/ql/log4cxx/build/src/main/include/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCXXSymbolExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckFunctionExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckSymbolExists.cmake;C:\Scratch\ql\log4cxx\src\cmake\boost-fallback\boost-std-configuration.h.cmake;C:\Scratch\ql\log4cxx\src\cmake\compiler-features\makeunique.h.cmake;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\log4cxx.h.in;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\log4cxx_private.h.in;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\version_info.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Scratch\ql\log4cxx\build\src\main\include\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Scratch/ql/log4cxx/src/main/include/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Scratch/ql/log4cxx -BC:/Scratch/ql/log4cxx/build --check-stamp-file C:/Scratch/ql/log4cxx/build/src/main/include/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCXXSymbolExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckFunctionExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckSymbolExists.cmake;C:\Scratch\ql\log4cxx\src\cmake\boost-fallback\boost-std-configuration.h.cmake;C:\Scratch\ql\log4cxx\src\cmake\compiler-features\makeunique.h.cmake;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\log4cxx.h.in;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\log4cxx_private.h.in;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\version_info.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Scratch\ql\log4cxx\build\src\main\include\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Scratch/ql/log4cxx/src/main/include/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Scratch/ql/log4cxx -BC:/Scratch/ql/log4cxx/build --check-stamp-file C:/Scratch/ql/log4cxx/build/src/main/include/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCXXSymbolExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckFunctionExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckSymbolExists.cmake;C:\Scratch\ql\log4cxx\src\cmake\boost-fallback\boost-std-configuration.h.cmake;C:\Scratch\ql\log4cxx\src\cmake\compiler-features\makeunique.h.cmake;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\log4cxx.h.in;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\log4cxx_private.h.in;C:\Scratch\ql\log4cxx\src\main\include\log4cxx\version_info.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Scratch\ql\log4cxx\build\src\main\include\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\appender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\appenderskeleton.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\asyncappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\basicconfigurator.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\config\propertysetter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\consoleappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\db\dbappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\db\odbcappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\defaultconfigurator.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\defaultloggerfactory.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\file.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\fileappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\filter\andfilter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\filter\denyallfilter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\filter\expressionfilter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\filter\levelmatchfilter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\filter\levelrangefilter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\filter\locationinfofilter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\filter\loggermatchfilter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\filter\mapfilter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\filter\propertyfilter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\filter\stringmatchfilter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\fmtlayout.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\absolutetimedateformat.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\appenderattachableimpl.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\aprinitializer.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\asyncbuffer.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\bufferedwriter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\bytearrayinputstream.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\bytearrayoutputstream.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\bytebuffer.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\cacheddateformat.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\charsetdecoder.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\charsetencoder.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\class.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\classregistration.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\cyclicbuffer.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\datagrampacket.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\datagramsocket.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\date.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\dateformat.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\datetimedateformat.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\exception.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\fileinputstream.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\fileoutputstream.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\filesystempath.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\filewatchdog.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\inetaddress.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\inputstream.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\inputstreamreader.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\integer.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\iso8601dateformat.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\loader.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\locale.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\loglog.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\messagebuffer.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\object.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\onlyonceerrorhandler.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\optional.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\optionconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\outputstream.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\outputstreamwriter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\pool.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\properties.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\propertyresourcebundle.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\reader.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\relativetimedateformat.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\resourcebundle.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\serversocket.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\simpledateformat.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\singletonholder.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\socket.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\socketoutputstream.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\strftimedateformat.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\strictmath.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\stringhelper.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\stringtokenizer.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\syslogwriter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\system.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\systemerrwriter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\systemoutwriter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\tchar.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\threadlocal.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\threadspecificdata.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\threadutility.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\timezone.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\transcoder.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\transform.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\widelife.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\writer.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\helpers\xml.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\hexdump.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\hierarchy.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\htmllayout.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\jsonlayout.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\layout.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\level.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\levelchange.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\log4cxx.h.in" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\logger.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\loggerinstance.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\logmanager.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\logstring.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\mdc.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\ndc.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\net\smtpappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\net\socketappenderskeleton.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\net\syslogappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\net\telnetappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\net\xmlsocketappender.h" />
+    <None Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\nt\EventLogCategories.mc">
+    </None>
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\nt\nteventlogappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\nt\outputdebugstringappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\classnamepatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\colorendpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\colorstartpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\datepatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\filedatepatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\filelocationpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\formattinginfo.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\fulllocationpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\integerpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\levelpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\linelocationpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\lineseparatorpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\literalpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\loggerpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\loggingeventpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\mdcpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\messagepatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\methodlocationpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\nameabbreviator.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\namepatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\ndcpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\patternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\patternparser.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\propertiespatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\relativetimepatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\shortfilelocationpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\threadpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\threadusernamepatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\pattern\throwableinformationpatternconverter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\patternlayout.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\action_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\appenderskeleton_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\aprdatagramsocket.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\aprserversocket.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\aprsocket.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\atexitregistry.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\datagramsocket_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\fileappender_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\filter_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\log4cxx_private.h.in" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\nteventlogappender_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\odbcappender_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\patternconverter_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\rollingfileappender_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\rollingpolicybase_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\serversocket_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\socket_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\socketappenderskeleton_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\string_c11.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\syslogappender_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\private\writerappender_priv.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\propertyconfigurator.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\provisionnode.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\action.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\filerenameaction.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\filterbasedtriggeringpolicy.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\fixedwindowrollingpolicy.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\gzcompressaction.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\manualtriggeringpolicy.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\multiprocessrollingfileappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\rollingfileappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\rollingpolicy.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\rollingpolicybase.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\rolloverdescription.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\sizebasedtriggeringpolicy.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\timebasedrollingpolicy.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\triggeringpolicy.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\rolling\zipcompressaction.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\simplelayout.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\appenderattachable.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\configurator.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\defaultrepositoryselector.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\errorhandler.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\filter.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\hierarchyeventlistener.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\location\locationinfo.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\loggerfactory.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\loggerrepository.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\loggingevent.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\optionhandler.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\repositoryselector.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\rootlogger.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\spi\triggeringeventevaluator.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\stream.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\varia\fallbackerrorhandler.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\version_info.h.in" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\writerappender.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\xml\domconfigurator.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\src\main\include\log4cxx\xml\xmllayout.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\build\src\main\include\log4cxx\helpers\makeunique.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\build\src\main\include\log4cxx\private\log4cxx_private.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\build\src\main\include\log4cxx\log4cxx.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\build\src\main\include\log4cxx\private\boost-std-configuration.h" />
+    <ClInclude Include="C:\Scratch\ql\log4cxx\build\src\main\include\log4cxx\version_info.h" />
+    <ClCompile Include="C:\Scratch\ql\log4cxx\build\src\main\include\empty-lib-stub.cpp" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="C:\Scratch\ql\log4cxx\build\ZERO_CHECK.vcxproj">
+      <Project>{5F050659-7BC0-3392-92FD-6D076271A0F1}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

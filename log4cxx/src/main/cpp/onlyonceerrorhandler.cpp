@@ -20,25 +20,22 @@
 #include <log4cxx/helpers/onlyonceerrorhandler.h>
 #include <log4cxx/helpers/loglog.h>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
-using namespace log4cxx::spi;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
+using namespace LOG4CXX_NS::spi;
 
 IMPLEMENT_LOG4CXX_OBJECT(OnlyOnceErrorHandler)
 
+struct OnlyOnceErrorHandler::OnlyOnceErrorHandlerPrivate{
+	mutable bool firstTime = true;
+};
+
 OnlyOnceErrorHandler::OnlyOnceErrorHandler() :
- WARN_PREFIX(LOG4CXX_STR("log4cxx warning: ")),
-ERROR_PREFIX(LOG4CXX_STR("log4cxx error: ")), firstTime(true)
+	m_priv(std::make_unique<OnlyOnceErrorHandlerPrivate>())
 {
 }
 
- void OnlyOnceErrorHandler::addRef() const {
-    ObjectImpl::addRef();
- }
-
- void OnlyOnceErrorHandler::releaseRef() const {
-    ObjectImpl::releaseRef();
- }
+OnlyOnceErrorHandler::~OnlyOnceErrorHandler(){}
 
 void OnlyOnceErrorHandler::setLogger(const LoggerPtr&)
 {
@@ -53,29 +50,29 @@ void OnlyOnceErrorHandler::setOption(const LogString&, const LogString&)
 }
 
 void OnlyOnceErrorHandler::error(const LogString& message, const std::exception& e,
-        int) const
+	int) const
 {
-        if(firstTime)
-        {
-                LogLog::error(message, e);
-                firstTime = false;
-        }
+	if (m_priv->firstTime)
+	{
+		LogLog::error(message, e);
+		m_priv->firstTime = false;
+	}
 }
 
 void OnlyOnceErrorHandler::error(const LogString& message, const std::exception& e,
-        int errorCode, const log4cxx::spi::LoggingEventPtr&) const
+	int errorCode, const LOG4CXX_NS::spi::LoggingEventPtr&) const
 {
-        error(message, e, errorCode);
+	error(message, e, errorCode);
 }
 
 
 void OnlyOnceErrorHandler::error(const LogString& message) const
 {
-        if(firstTime)
-        {
-                LogLog::error(message);
-                firstTime = false;
-        }
+	if (m_priv->firstTime)
+	{
+		LogLog::error(message);
+		m_priv->firstTime = false;
+	}
 }
 
 
@@ -87,3 +84,9 @@ void OnlyOnceErrorHandler::setAppender(const AppenderPtr&)
 void OnlyOnceErrorHandler::setBackupAppender(const AppenderPtr&)
 {
 }
+
+bool OnlyOnceErrorHandler::errorReported() const
+{
+	return !m_priv->firstTime;
+}
+

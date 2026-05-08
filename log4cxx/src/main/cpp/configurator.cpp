@@ -19,14 +19,44 @@
 #include <log4cxx/spi/configurator.h>
 #include <assert.h>
 #include <log4cxx/logger.h>
+#include <log4cxx/helpers/singletonholder.h>
+#include <log4cxx/helpers/system.h>
 
-using namespace log4cxx;
-using namespace log4cxx::spi;
+#if !defined(LOG4CXX)
+	#define LOG4CXX 1
+#endif
+#include <log4cxx/helpers/aprinitializer.h>
+
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::spi;
 
 IMPLEMENT_LOG4CXX_OBJECT(Configurator)
 
 
+namespace
+{
+	struct ConfiguratorTag {};
+	using ConfiguratorProperties = std::pair<ConfiguratorTag, helpers::Properties>;
 
+	ConfiguratorProperties& getInstance()
+	{
+		using ConfiguratorObject = helpers::SingletonHolder<ConfiguratorProperties>;
+		auto result = helpers::APRInitializer::getOrAddUnique<ConfiguratorObject>
+			( []() -> helpers::ObjectPtr
+				{ return std::make_shared<ConfiguratorObject>(); }
+			);
+		return result->value();
+	}
+}
 
-Configurator::Configurator() {
+Configurator::Configurator()
+{
+}
+
+helpers::Properties& Configurator::properties()
+{
+	auto& result = getInstance().second;
+	if (result.isEmpty())
+		helpers::System::addProgramFilePathComponents(result);
+	return result;
 }

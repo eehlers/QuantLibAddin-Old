@@ -14,38 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(_MSC_VER)
-#pragma warning ( disable: 4231 4251 4275 4786 )
-#endif
-
-
 
 #include <log4cxx/logstring.h>
 #include <log4cxx/pattern/methodlocationpatternconverter.h>
 #include <log4cxx/spi/loggingevent.h>
 #include <log4cxx/spi/location/locationinfo.h>
 
-using namespace log4cxx;
-using namespace log4cxx::pattern;
-using namespace log4cxx::spi;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::pattern;
+using namespace LOG4CXX_NS::spi;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(MethodLocationPatternConverter)
 
 MethodLocationPatternConverter::MethodLocationPatternConverter() :
-   LoggingEventPatternConverter(LOG4CXX_STR("Method"),
-      LOG4CXX_STR("method")) {
+	LoggingEventPatternConverter(LOG4CXX_STR("Method"),
+		LOG4CXX_STR("method"))
+{
 }
 
 PatternConverterPtr MethodLocationPatternConverter::newInstance(
-   const std::vector<LogString>& /* options */ ) {
-   static PatternConverterPtr def(new MethodLocationPatternConverter());
-   return def;
+	const std::vector<LogString>& /* options */ )
+{
+	static WideLife<PatternConverterPtr> def = std::make_shared<MethodLocationPatternConverter>();
+	return def;
 }
 
 void MethodLocationPatternConverter::format(
-  const LoggingEventPtr& event,
-  LogString& toAppendTo,
-  Pool& /* p */ ) const {
-   append(toAppendTo, event->getLocationInformation().getMethodName());
- }
+	const LoggingEventPtr& event,
+	LogString& toAppendTo,
+	Pool& /* p */ ) const
+{
+	append(toAppendTo, event->getLocationInformation().getMethodName());
+}

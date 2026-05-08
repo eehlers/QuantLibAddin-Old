@@ -26,79 +26,84 @@
 #include <log4cxx/layout.h>
 #include <log4cxx/helpers/pool.h>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
-using namespace log4cxx::spi;
-using namespace log4cxx::config;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
+using namespace LOG4CXX_NS::spi;
+using namespace LOG4CXX_NS::config;
 
 PropertySetter::PropertySetter(const helpers::ObjectPtr& obj1) : obj(obj1)
 {
 }
 
 void PropertySetter::setProperties(const helpers::ObjectPtr& obj,
-     helpers::Properties& properties,
-     const LogString& prefix,
-     Pool& p)
+	helpers::Properties& properties,
+	const LogString& prefix,
+	Pool& p)
 {
-        PropertySetter(obj).setProperties(properties, prefix, p);
+	PropertySetter(obj).setProperties(properties, prefix, p);
 }
 
 
 void PropertySetter::setProperties(helpers::Properties& properties,
-        const LogString& prefix,
-        Pool& p)
+	const LogString& prefix,
+	Pool& p)
 {
-        int len = prefix.length();
+	size_t len = prefix.length();
 
-        std::vector<LogString> names = properties.propertyNames();
-        std::vector<LogString>::iterator it;
+	for (auto key : properties.propertyNames())
+	{
+		// handle only properties that start with the desired frefix.
+		if (key.find(prefix) == 0)
+		{
+			// ignore key if it contains dots after the prefix
+			if (key.find(0x2E /* '.' */, len + 1) != LogString::npos)
+			{
+				continue;
+			}
 
-        for (it = names.begin(); it != names.end(); it++)
-        {
-                LogString key = *it;
+			LogString value = OptionConverter::findAndSubst(key, properties);
+			key = key.substr(len);
 
-                // handle only properties that start with the desired frefix.
-                if (key.find(prefix) == 0)
-                {
-                        // ignore key if it contains dots after the prefix
-                        if (key.find(0x2E /* '.' */, len + 1) != LogString::npos)
-                        {
-                                continue;
-                        }
+			if (key == LOG4CXX_STR("layout")
+				&& obj != 0
+				&& obj->instanceof(Appender::getStaticClass()))
+			{
+				continue;
+			}
 
-                        LogString value = OptionConverter::findAndSubst(key, properties);
-                        key = key.substr(len);
-                        if (key == LOG4CXX_STR("layout")
-                                && obj != 0
-                                && obj->instanceof(Appender::getStaticClass()))
-                        {
-                                continue;
-                        }
-                        setProperty(key, value, p);
-                }
-        }
-        activate(p);
+			setProperty(key, value, p);
+		}
+	}
+
+	activate(p);
 }
 
 void PropertySetter::setProperty(const LogString& option,
-                                 const LogString& value,
-                                 Pool&)
+	const LogString& value,
+	Pool&)
 {
-        if (value.empty())
-                return;
+	if (value.empty())
+	{
+		return;
+	}
 
-        if (obj != 0 && obj->instanceof(OptionHandler::getStaticClass()))
-        {
-                LogLog::debug(LOG4CXX_STR("Setting option name=[") +
-                        option + LOG4CXX_STR("], value=[") + value + LOG4CXX_STR("]"));
-                OptionHandlerPtr(obj)->setOption(option, value);
-        }
+	if (obj != 0 && obj->instanceof(OptionHandler::getStaticClass()))
+	{
+		if (LogLog::isDebugEnabled())
+		{
+			LogLog::debug(LOG4CXX_STR("Setting option name=[") +
+				option + LOG4CXX_STR("], value=[") + value + LOG4CXX_STR("]"));
+		}
+		OptionHandlerPtr handler = LOG4CXX_NS::cast<OptionHandler>(obj);
+		handler->setOption(option, value);
+	}
 }
 
 void PropertySetter::activate(Pool& p)
 {
-        if (obj != 0 && obj->instanceof(OptionHandler::getStaticClass()))
-        {
-                OptionHandlerPtr(obj)->activateOptions(p);
-        }
+	if (obj != 0 && obj->instanceof(OptionHandler::getStaticClass()))
+	{
+		OptionHandlerPtr handler = LOG4CXX_NS::cast<OptionHandler>(obj);
+		handler->activateOptions(p);
+	}
 }

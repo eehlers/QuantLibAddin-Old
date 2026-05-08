@@ -16,13 +16,13 @@
  */
 
 #include "writerappendertestcase.h"
-#include <log4cxx/helpers/objectptr.h>
 #include <log4cxx/writerappender.h>
 
 
 using namespace log4cxx;
 using namespace log4cxx::helpers;
 
-AppenderSkeleton* WriterAppenderTestCase::createAppenderSkeleton() const {
-    return createWriterAppender();
+AppenderSkeleton* WriterAppenderTestCase::createAppenderSkeleton() const
+{
+	return createWriterAppender();
 }

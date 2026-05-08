@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Scratch\ql\log4cxx\build\CMakeFiles\500231bac143ec64d034b83281a2ff8e\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{6F442EE9-FD4C-3769-915E-5A0225A39DBA}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

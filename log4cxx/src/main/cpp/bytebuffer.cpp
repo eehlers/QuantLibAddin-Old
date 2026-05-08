@@ -17,49 +17,109 @@
 #include <log4cxx/logstring.h>
 #include <log4cxx/helpers/bytebuffer.h>
 #include <log4cxx/helpers/exception.h>
-#include <apr_pools.h>
 #include <log4cxx/helpers/pool.h>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
+
+struct ByteBuffer::ByteBufferPriv
+{
+	ByteBufferPriv(char* data1, size_t capacity) :
+		base(data1), pos(0), lim(capacity), cap(capacity) {}
+
+	char* base;
+	size_t pos;
+	size_t lim;
+	size_t cap;
+};
 
 ByteBuffer::ByteBuffer(char* data1, size_t capacity)
-   : base(data1), pos(0), lim(capacity), cap(capacity) {
+	: m_priv(std::make_unique<ByteBufferPriv>(data1, capacity))
+{
 }
 
-ByteBuffer::~ByteBuffer() {
+ByteBuffer::~ByteBuffer()
+{
 }
 
-void ByteBuffer::clear() {
-  lim = cap;
-  pos = 0;
+void ByteBuffer::clear()
+{
+	m_priv->lim = m_priv->cap;
+	m_priv->pos = 0;
 }
 
-void ByteBuffer::flip() {
-  lim = pos;
-  pos = 0;
+void ByteBuffer::flip()
+{
+	m_priv->lim = m_priv->pos;
+	m_priv->pos = 0;
 }
 
-void ByteBuffer::position(size_t newPosition) {
-  if (newPosition < lim) {
-    pos = newPosition;
-  } else {
-    pos = lim;
-  }
+void ByteBuffer::position(size_t newPosition)
+{
+	if (newPosition < m_priv->lim)
+	{
+		m_priv->pos = newPosition;
+	}
+	else
+	{
+		m_priv->pos = m_priv->lim;
+	}
 }
 
-void ByteBuffer::limit(size_t newLimit) {
-  if (newLimit > cap) {
-    throw IllegalArgumentException(LOG4CXX_STR("newLimit"));
-  }
-  lim = newLimit;
+void ByteBuffer::limit(size_t newLimit)
+{
+	if (newLimit > m_priv->cap)
+	{
+		throw IllegalArgumentException(LOG4CXX_STR("newLimit"));
+	}
+
+	m_priv->lim = newLimit;
 }
 
 
-bool ByteBuffer::put(char byte) {
-  if (pos < lim) {
-    base[pos++] = byte;
-    return true;
-  }
-  return false;
+bool ByteBuffer::put(char byte)
+{
+	if (m_priv->pos < m_priv->lim)
+	{
+		m_priv->base[m_priv->pos++] = byte;
+		return true;
+	}
+
+	return false;
 }
+
+char* ByteBuffer::data()
+{
+	return m_priv->base;
+}
+
+const char* ByteBuffer::data() const
+{
+	return m_priv->base;
+}
+
+char* ByteBuffer::current()
+{
+	return m_priv->base + m_priv->pos;
+}
+
+const char* ByteBuffer::current() const
+{
+	return m_priv->base + m_priv->pos;
+}
+
+size_t ByteBuffer::limit() const
+{
+	return m_priv->lim;
+}
+
+size_t ByteBuffer::position() const
+{
+	return m_priv->pos;
+}
+
+size_t ByteBuffer::remaining() const
+{
+	return m_priv->lim - m_priv->pos;
+}
+

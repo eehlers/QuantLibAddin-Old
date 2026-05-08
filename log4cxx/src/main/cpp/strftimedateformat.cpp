@@ -21,35 +21,55 @@
 #include <apr_time.h>
 #include <log4cxx/helpers/transcoder.h>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
+
+struct StrftimeDateFormat::StrftimeDateFormatPrivate{
+	StrftimeDateFormatPrivate() :
+		timeZone(TimeZone::getDefault())
+	{}
+
+	/**
+	*    Time zone.
+	*/
+	TimeZonePtr timeZone;
+	std::string pattern;
+};
 
 
 StrftimeDateFormat::StrftimeDateFormat(const LogString& fmt)
-  : timeZone(TimeZone::getDefault()) {
-    log4cxx::helpers::Transcoder::encode(fmt, pattern);
+	: m_priv(std::make_unique<StrftimeDateFormatPrivate>())
+{
+	LOG4CXX_NS::helpers::Transcoder::encode(fmt, m_priv->pattern);
 }
 
-StrftimeDateFormat::~StrftimeDateFormat() {
+StrftimeDateFormat::~StrftimeDateFormat()
+{
 }
 
 
-void StrftimeDateFormat::format(LogString& s, log4cxx_time_t time, Pool& /* p */ ) const  {
-  apr_time_exp_t exploded;
-  apr_status_t stat = timeZone->explode(&exploded, time);
-  if (stat == APR_SUCCESS) {
-    const apr_size_t bufSize = 255;
-    char buf[bufSize];
-    apr_size_t bufLen;
-    stat = apr_strftime(buf, &bufLen, bufSize, pattern.c_str(), &exploded);
-    if (stat == APR_SUCCESS) {
-      log4cxx::helpers::Transcoder::decode(std::string(buf, bufLen), s);
-    }
-  }
+void StrftimeDateFormat::format(LogString& s, log4cxx_time_t time, Pool& /* p */ ) const
+{
+	apr_time_exp_t exploded;
+	apr_status_t stat = m_priv->timeZone->explode(&exploded, time);
+
+	if (stat == APR_SUCCESS)
+	{
+		const apr_size_t bufSize = 255;
+		char buf[bufSize];
+		apr_size_t bufLen;
+		stat = apr_strftime(buf, &bufLen, bufSize, m_priv->pattern.c_str(), &exploded);
+
+		if (stat == APR_SUCCESS)
+		{
+			LOG4CXX_NS::helpers::Transcoder::decode(std::string(buf, bufLen), s);
+		}
+	}
 }
 
-void StrftimeDateFormat::setTimeZone(const TimeZonePtr& zone) {
-  timeZone = zone;
+void StrftimeDateFormat::setTimeZone(const TimeZonePtr& zone)
+{
+	m_priv->timeZone = zone;
 }
 
 

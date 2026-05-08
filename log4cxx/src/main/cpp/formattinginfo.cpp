@@ -19,50 +19,97 @@
 #include <log4cxx/pattern/formattinginfo.h>
 #include <limits.h>
 
-using namespace log4cxx;
-using namespace log4cxx::pattern;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::pattern;
+
+struct FormattingInfo::FormattingInfoPrivate
+{
+	FormattingInfoPrivate(const bool leftAlign1, const int minLength1, const int maxLength1):
+		minLength(minLength1),
+		maxLength(maxLength1),
+		leftAlign(leftAlign1) {}
+
+	/**
+	 * Minimum length.
+	 */
+	const int minLength;
+
+	/**
+	 * Maximum length.
+	 */
+	const int maxLength;
+
+	/**
+	 * Alignment.
+	 */
+	const bool leftAlign;
+};
 
 IMPLEMENT_LOG4CXX_OBJECT(FormattingInfo)
 
-  /**
-   * Creates new instance.
-   * @param leftAlign left align if true.
-   * @param minLength minimum length.
-   * @param maxLength maximum length.
-   */
+/**
+ * Creates new instance.
+ * @param leftAlign left align if true.
+ * @param minLength minimum length.
+ * @param maxLength maximum length.
+ */
 FormattingInfo::FormattingInfo(
-    const bool leftAlign1, const int minLength1, const int maxLength1) :
-    minLength(minLength1),
-    maxLength(maxLength1),
-    leftAlign(leftAlign1) {
+	const bool leftAlign1, const int minLength1, const int maxLength1) :
+	m_priv(std::make_unique<FormattingInfoPrivate>(leftAlign1, minLength1, maxLength1))
+{
 }
 
-  /**
-   * Gets default instance.
-   * @return default instance.
-   */
-FormattingInfoPtr FormattingInfo::getDefault() {
-    static FormattingInfoPtr def(new FormattingInfo(false, 0, INT_MAX));
-    return def;
+FormattingInfo::~FormattingInfo() {}
+
+/**
+ * Gets default instance.
+ * @return default instance.
+ */
+FormattingInfoPtr FormattingInfo::getDefault()
+{
+	static helpers::WideLife<FormattingInfoPtr> def= std::make_shared<FormattingInfo>(false, 0, INT_MAX);
+	return def;
 }
 
-  /**
-   * Adjust the content of the buffer based on the specified lengths and alignment.
-   *
-   * @param fieldStart start of field in buffer.
-   * @param buffer buffer to be modified.
-   */
-void FormattingInfo::format(const int fieldStart, LogString& buffer) const {
-    int rawLength = buffer.length() - fieldStart;
+/**
+ * Adjust the content of the buffer based on the specified lengths and alignment.
+ *
+ * @param fieldStart start of field in buffer.
+ * @param buffer buffer to be modified.
+ */
+void FormattingInfo::format(const int fieldStart, LogString& buffer) const
+{
+	int rawLength = int(buffer.length() - fieldStart);
 
-    if (rawLength > maxLength) {
-      buffer.erase(buffer.begin() + fieldStart,
-                   buffer.begin() + fieldStart + (rawLength - maxLength));
-    } else if (rawLength < minLength) {
-      if (leftAlign) {
-        buffer.append(minLength - rawLength, (logchar) 0x20 /* ' ' */);
-      } else {
-        buffer.insert(fieldStart, minLength - rawLength, 0x20 /* ' ' */);
-      }
-    }
-  }
+	if (rawLength > m_priv->maxLength)
+	{
+		buffer.erase(buffer.begin() + fieldStart,
+			buffer.begin() + fieldStart + (rawLength - m_priv->maxLength));
+	}
+	else if (rawLength < m_priv->minLength)
+	{
+		if (m_priv->leftAlign)
+		{
+			buffer.append(m_priv->minLength - rawLength, (logchar) 0x20 /* ' ' */);
+		}
+		else
+		{
+			buffer.insert(fieldStart, m_priv->minLength - rawLength, 0x20 /* ' ' */);
+		}
+	}
+}
+
+bool FormattingInfo::isLeftAligned() const
+{
+	return m_priv->leftAlign;
+}
+
+int FormattingInfo::getMinLength() const
+{
+	return m_priv->minLength;
+}
+
+int FormattingInfo::getMaxLength() const
+{
+	return m_priv->maxLength;
+}

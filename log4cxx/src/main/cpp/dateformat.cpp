@@ -20,8 +20,8 @@
 #include <log4cxx/helpers/stringhelper.h>
 
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(DateFormat)
 
@@ -29,8 +29,9 @@ DateFormat::~DateFormat() {}
 
 void DateFormat::setTimeZone(const TimeZonePtr&) {}
 
-void DateFormat::numberFormat(LogString& s, int n, Pool& p) const {
-    StringHelper::toString(n, p, s);
+void DateFormat::numberFormat(LogString& s, int n, Pool& p) const
+{
+	StringHelper::toString(n, p, s);
 }
 
 DateFormat::DateFormat() {}

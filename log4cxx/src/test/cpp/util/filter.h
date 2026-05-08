@@ -18,11 +18,6 @@
 #ifndef _LOG4CXX_TESTS_UTIL_FILTER_H
 #define _LOG4CXX_TESTS_UTIL_FILTER_H
 
-#if defined(_MSC_VER)
-#pragma warning (push)
-#pragma warning ( disable: 4231 4251 4275 4786 )
-#endif
-
 #include <string>
 #include <vector>
 #include <map>
@@ -31,38 +26,36 @@
 #define BASIC_PAT "\\[0x[0-9A-F]*] (FATAL|ERROR|WARN|INFO|DEBUG)"
 #define ISO8601_PAT "[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} [0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\},[0-9]\\{3\\}"
 #define ABSOLUTE_DATE_AND_TIME_PAT \
-        "[0-9]\\{1,2\\} .* 200[0-9] [0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\},[0-9]\\{3\\}"
+	"[0-9]\\{1,2\\} .* 2[0-9][0-9][0-9] [0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\},[0-9]\\{3\\}"
 #define ABSOLUTE_TIME_PAT "[0-2][0-9]:[0-9][0-9]:[0-9][0-9],[0-9][0-9][0-9]"
 #define RELATIVE_TIME_PAT "^[0-9]+"
 
-namespace log4cxx
+namespace LOG4CXX_NS
 {
-        class UnexpectedFormatException : public std::exception {
-        };
+class UnexpectedFormatException : public std::exception
+{
+};
 
-        class Filter
-        {
-        public:
-            Filter(const std::string& match, const std::string& replacement);
-            Filter();
-            virtual ~Filter();
+class Filter
+{
+	public:
+		Filter(const std::string& match, const std::string& replacement);
+		Filter();
+		virtual ~Filter();
 
-            typedef std::pair<std::string, std::string> PatternReplacement;
-            typedef std::vector <PatternReplacement> PatternList;
-            const PatternList& getPatterns()  const{
-                return patterns;
-            }
+		typedef std::pair<std::string, std::string> PatternReplacement;
+		typedef std::vector <PatternReplacement> PatternList;
+		const PatternList& getPatterns()  const
+		{
+			return patterns;
+		}
 
-        private:
-            Filter(const Filter&);
-            Filter& operator=(const Filter&);
-        protected:
-            PatternList patterns;
-        };
+	private:
+		Filter(const Filter&);
+		Filter& operator=(const Filter&);
+	protected:
+		PatternList patterns;
+};
 }
-
-#if defined(_MSC_VER)
-#pragma warning (pop)
-#endif
 
 #endif //_LOG4CXX_TESTS_UTIL_FILTER_H

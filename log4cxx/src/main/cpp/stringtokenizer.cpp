@@ -19,15 +19,23 @@
 #include <log4cxx/helpers/stringtokenizer.h>
 #include <log4cxx/helpers/exception.h>
 #if !defined(LOG4CXX)
-#define LOG4CXX 1
+	#define LOG4CXX 1
 #endif
 #include <log4cxx/private/log4cxx_private.h>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
+
+struct StringTokenizer::StringTokenizerPrivate{
+	StringTokenizerPrivate(const LogString& str, const LogString& delim1) : src(str), delim(delim1), pos(0){}
+	LogString src;
+	LogString delim;
+	size_t pos;
+};
+
 
 StringTokenizer::StringTokenizer(const LogString& str, const LogString& delim1)
-: src(str), delim(delim1), pos(0)
+	: m_priv(std::make_unique<StringTokenizerPrivate>(str, delim1))
 {
 }
 
@@ -37,24 +45,31 @@ StringTokenizer::~StringTokenizer()
 
 bool StringTokenizer::hasMoreTokens() const
 {
-        return (pos != LogString::npos
-            && src.find_first_not_of(delim, pos) != LogString::npos);
+	return (m_priv->pos != LogString::npos
+			&& m_priv->src.find_first_not_of(m_priv->delim, m_priv->pos) != LogString::npos);
 }
 
 LogString StringTokenizer::nextToken()
 {
-        if (pos != LogString::npos) {
-            size_t nextPos = src.find_first_not_of(delim, pos);
-            if (nextPos != LogString::npos) {
-               pos = src.find_first_of(delim, nextPos);
-               if (pos == LogString::npos) {
-                 return src.substr(nextPos);
-               }
-               return src.substr(nextPos, pos - nextPos);
-            }
-        }
-        throw NoSuchElementException();
+	if (m_priv->pos != LogString::npos)
+	{
+		size_t nextPos = m_priv->src.find_first_not_of(m_priv->delim, m_priv->pos);
+
+		if (nextPos != LogString::npos)
+		{
+			m_priv->pos = m_priv->src.find_first_of(m_priv->delim, nextPos);
+
+			if (m_priv->pos == LogString::npos)
+			{
+				return m_priv->src.substr(nextPos);
+			}
+
+			return m_priv->src.substr(nextPos, m_priv->pos - nextPos);
+		}
+	}
+
+	throw NoSuchElementException();
 #if LOG4CXX_RETURN_AFTER_THROW
-        return LogString();
+	return LogString();
 #endif
 }

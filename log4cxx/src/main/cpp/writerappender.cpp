@@ -17,62 +17,81 @@
 
 #include <log4cxx/writerappender.h>
 #include <log4cxx/helpers/loglog.h>
-#include <log4cxx/helpers/synchronized.h>
 #include <log4cxx/layout.h>
 #include <log4cxx/helpers/stringhelper.h>
+#include <log4cxx/private/appenderskeleton_priv.h>
+#include <log4cxx/private/writerappender_priv.h>
+#include <mutex>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
-using namespace log4cxx::spi;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
+using namespace LOG4CXX_NS::spi;
+
+#define _priv static_cast<WriterAppenderPriv*>(m_priv.get())
 
 IMPLEMENT_LOG4CXX_OBJECT(WriterAppender)
 
-WriterAppender::WriterAppender() {
-   synchronized sync(mutex);
-   immediateFlush = true;
+WriterAppender::WriterAppender() :
+	AppenderSkeleton (std::make_unique<WriterAppenderPriv>())
+{
 }
 
-WriterAppender::WriterAppender(const LayoutPtr& layout1,
-               log4cxx::helpers::WriterPtr& writer1)
-    : AppenderSkeleton(layout1), writer(writer1) {
-      Pool p;
-      synchronized sync(mutex);
-      immediateFlush = true;
-      activateOptions(p);
+#if LOG4CXX_ABI_VERSION <= 15
+WriterAppender::WriterAppender(const LayoutPtr& layout, helpers::WriterPtr& writer)
+	: AppenderSkeleton (std::make_unique<WriterAppenderPriv>(layout, writer))
+{
+	Pool p;
+	activateOptions(p);
 }
 
-WriterAppender::WriterAppender(const LayoutPtr& layout1)
-    : AppenderSkeleton(layout1) {
-    synchronized sync(mutex);
-    immediateFlush = true;
+WriterAppender::WriterAppender(const LayoutPtr& layout)
+	: AppenderSkeleton (std::make_unique<WriterAppenderPriv>(layout))
+{
 }
+#else
+WriterAppender::WriterAppender(const LayoutPtr& layout, const helpers::WriterPtr& writer)
+	: AppenderSkeleton(std::make_unique<WriterAppenderPriv>(layout, writer))
+{
+	Pool p;
+	activateOptions(p);
+}
+#endif
 
+WriterAppender::WriterAppender(std::unique_ptr<WriterAppenderPriv> priv)
+	: AppenderSkeleton (std::move(priv))
+{
+
+}
 
 WriterAppender::~WriterAppender()
 {
-    finalize();
+	finalize();
 }
 
 void WriterAppender::activateOptions(Pool& p)
 {
-        int errors = 0;
-        if(layout == 0) {
-                errorHandler->error(
-                        ((LogString) LOG4CXX_STR("No layout set for the appender named ["))
-                        + name+ LOG4CXX_STR("]."));
-                errors++;
-        }
+	int errors = 0;
 
-        if(writer == 0) {
-          errorHandler->error(
-                  ((LogString) LOG4CXX_STR("No writer set for the appender named ["))
-                  + name+ LOG4CXX_STR("]."));
-          errors++;
-        }
+	if (_priv->layout == 0)
+	{
+		_priv->errorHandler->error(
+			((LogString) LOG4CXX_STR("No layout set for the appender named ["))
+			+ _priv->name + LOG4CXX_STR("]."));
+		errors++;
+	}
 
-        if (errors == 0) {
-           AppenderSkeleton::activateOptions(p);
-        }
+	if (_priv->writer == 0)
+	{
+		_priv->errorHandler->error(
+			((LogString) LOG4CXX_STR("No writer set for the appender named ["))
+			+ _priv->name + LOG4CXX_STR("]."));
+		errors++;
+	}
+
+	if (errors == 0)
+	{
+		AppenderSkeleton::activateOptions(p);
+	}
 }
 
 
@@ -80,12 +99,12 @@ void WriterAppender::activateOptions(Pool& p)
 void WriterAppender::append(const spi::LoggingEventPtr& event, Pool& pool1)
 {
 
-        if(!checkEntryConditions())
-        {
-                return;
-        }
+	if (!checkEntryConditions())
+	{
+		return;
+	}
 
-        subAppend(event, pool1);
+	subAppend(event, pool1);
 }
 
 /**
@@ -94,29 +113,25 @@ void WriterAppender::append(const spi::LoggingEventPtr& event, Pool& pool1)
    <p>It checks whether there is a set output target and also if
    there is a set layout. If these checks fail, then the boolean
    value <code>false</code> is returned. */
-bool WriterAppender::checkEntryConditions() const {
-  static bool warnedClosed = false;
-  static bool warnedNoWriter = false;
-  if (closed) {
-    if(!warnedClosed) {
-      LogLog::warn(LOG4CXX_STR("Not allowed to write to a closed appender."));
-      warnedClosed = true;
-    }
-    return false;
-  }
+bool WriterAppender::checkEntryConditions() const
+{
+	return _priv->checkWriter() && _priv->checkLayout() && _priv->checkNotClosed();
+}
 
-  if (writer == 0) {
-    if (!warnedNoWriter) {
-        LogLog::error(
-            LogString(LOG4CXX_STR("No output stream or file set for the appender named [")) +
-               name + LOG4CXX_STR("]."));
-        warnedNoWriter = true;
-    }
-
-    return false;
-  }
-
-  return true;
+bool WriterAppender::WriterAppenderPriv::checkWriter()
+{
+	if (this->writer == 0)
+	{
+		if (!this->warnedNoWriter)
+		{
+			this->errorHandler->error(
+				LogString(LOG4CXX_STR("No output stream or file set for the appender named [")) +
+				this->name + LOG4CXX_STR("]."));
+			this->warnedNoWriter = true;
+		}
+		return false;
+	}
+	return true;
 }
 
 
@@ -132,35 +147,40 @@ bool WriterAppender::checkEntryConditions() const {
    */
 void WriterAppender::close()
 {
-        synchronized sync(mutex);
+	std::lock_guard<std::recursive_mutex> lock(_priv->mutex);
 
-        if(closed)
-        {
-                return;
-        }
+	if (_priv->closed)
+	{
+		return;
+	}
 
-        closed = true;
-        closeWriter();
+	_priv->closed = true;
+	closeWriter();
 }
 
 /**
  * Close the underlying {@link java.io.Writer}.
  * */
-void WriterAppender::closeWriter() {
-  if (writer != NULL) {
-    try {
-      // before closing we have to output out layout's footer
-      //
-      //   Using the object's pool since this is a one-shot operation
-      //    and pool is likely to be reclaimed soon when appender is destructed.
-      //
-      writeFooter(pool);
-      writer->close(pool);
-      writer = 0;
-    } catch (IOException& e) {
-      LogLog::error(LogString(LOG4CXX_STR("Could not close writer for WriterAppender named "))+name, e);
-    }
-  }
+void WriterAppender::closeWriter()
+{
+	if (_priv->writer != NULL)
+	{
+		try
+		{
+			// before closing we have to output out layout's footer
+			//
+			//   Using the object's pool since this is a one-shot operation
+			//    and pool is likely to be reclaimed soon when appender is destructed.
+			//
+			writeFooter(_priv->pool);
+			_priv->writer->close(_priv->pool);
+			_priv->writer = 0;
+		}
+		catch (IOException& e)
+		{
+			LogLog::warn(LOG4CXX_STR("Could not close writer for WriterAppender named ") + _priv->name, e);
+		}
+	}
 
 }
 
@@ -170,95 +190,127 @@ void WriterAppender::closeWriter() {
    <code>encoding</code> property.  If the encoding value is
    specified incorrectly the writer will be opened using the default
    system encoding (an error message will be printed to the loglog.  */
-WriterPtr WriterAppender::createWriter(OutputStreamPtr& os) {
+WriterPtr WriterAppender::createWriter(LOG4CXX_16_CONST OutputStreamPtr& os)
+{
 
-  LogString enc(getEncoding());
+	LogString enc(getEncoding());
 
-  CharsetEncoderPtr encoder;
-  if (enc.empty()) {
-    encoder = CharsetEncoder::getDefaultEncoder();
-  } else {
-    if(StringHelper::equalsIgnoreCase(enc,
-        LOG4CXX_STR("utf-16"), LOG4CXX_STR("UTF-16"))) {
-      encoder = CharsetEncoder::getEncoder(LOG4CXX_STR("UTF-16BE"));
-    } else {
-      encoder = CharsetEncoder::getEncoder(enc);
-    }
-    if (encoder == NULL) {
-      encoder = CharsetEncoder::getDefaultEncoder();
-      LogLog::warn(LOG4CXX_STR("Error initializing output writer."));
-      LogLog::warn(LOG4CXX_STR("Unsupported encoding?"));
-    }
-  }
+	CharsetEncoderPtr encoder;
 
-  return new OutputStreamWriter(os, encoder);
+	if (enc.empty())
+	{
+		encoder = CharsetEncoder::getDefaultEncoder();
+	}
+	else
+	{
+		if (StringHelper::equalsIgnoreCase(enc,
+				LOG4CXX_STR("utf-16"), LOG4CXX_STR("UTF-16")))
+		{
+			encoder = CharsetEncoder::getEncoder(LOG4CXX_STR("UTF-16BE"));
+		}
+		else
+		{
+			encoder = CharsetEncoder::getEncoder(enc);
+		}
+
+		if (encoder == NULL)
+		{
+			encoder = CharsetEncoder::getDefaultEncoder();
+			LogLog::warn(LOG4CXX_STR("Error initializing output writer."));
+			LogLog::warn(LOG4CXX_STR("Unsupported encoding?"));
+		}
+	}
+
+	return std::make_shared<OutputStreamWriter>(os, encoder);
 }
 
-LogString WriterAppender::getEncoding() const {
-  return encoding;
+LogString WriterAppender::getEncoding() const
+{
+	return _priv->encoding;
 }
 
-void WriterAppender::setEncoding(const LogString& enc) {
-  encoding = enc;
+void WriterAppender::setEncoding(const LogString& enc)
+{
+	_priv->encoding = enc;
 }
 
 void WriterAppender::subAppend(const spi::LoggingEventPtr& event, Pool& p)
 {
-        LogString msg;
-        layout->format(msg, event, p);
-        {
-           synchronized sync(mutex);
-         if (writer != NULL) {
-           writer->write(msg, p);
-              if (immediateFlush) {
-               writer->flush(p);
-              }
-         }
-        }
+	LogString msg;
+	_priv->layout->format(msg, event, p);
+
+	if (_priv->writer != NULL)
+	{
+		_priv->writer->write(msg, p);
+
+		if (_priv->immediateFlush)
+		{
+			_priv->writer->flush(p);
+		}
+	}
 }
 
 
 void WriterAppender::writeFooter(Pool& p)
 {
-        if (layout != NULL) {
-          LogString foot;
-          layout->appendFooter(foot, p);
-          synchronized sync(mutex);
-          writer->write(foot, p);
-        }
+	if (_priv->layout != NULL)
+	{
+		LogString foot;
+		_priv->layout->appendFooter(foot, p);
+		_priv->writer->write(foot, p);
+	}
 }
 
 void WriterAppender::writeHeader(Pool& p)
 {
-        if(layout != NULL) {
-          LogString header;
-          layout->appendHeader(header, p);
-          synchronized sync(mutex);
-          writer->write(header, p);
-        }
+	if (_priv->layout != NULL)
+	{
+		LogString header;
+		_priv->layout->appendHeader(header, p);
+		_priv->writer->write(header, p);
+	}
 }
 
 
-void WriterAppender::setWriter(const WriterPtr& newWriter) {
-   synchronized sync(mutex);
-   writer = newWriter;
+void WriterAppender::setWriter(const WriterPtr& newWriter)
+{
+	std::lock_guard<std::recursive_mutex> lock(_priv->mutex);
+	setWriterInternal(newWriter);
+}
+
+void WriterAppender::setWriterInternal(const WriterPtr& newWriter)
+{
+	_priv->writer = newWriter;
+}
+
+bool WriterAppender::requiresLayout() const
+{
+	return true;
+}
+
+void WriterAppender::setOption(const LogString& option, const LogString& value)
+{
+	if (StringHelper::equalsIgnoreCase(option, LOG4CXX_STR("ENCODING"), LOG4CXX_STR("encoding")))
+	{
+		setEncoding(value);
+	}
+	else
+	{
+		AppenderSkeleton::setOption(option, value);
+	}
 }
 
 
-bool WriterAppender::requiresLayout() const {
-   return true;
+void WriterAppender::setImmediateFlush(bool value)
+{
+	_priv->immediateFlush = value;
 }
 
-void WriterAppender::setOption(const LogString& option, const LogString& value) {
-    if(StringHelper::equalsIgnoreCase(option, LOG4CXX_STR("ENCODING"), LOG4CXX_STR("encoding"))) {
-       setEncoding(value);
-    } else {
-      AppenderSkeleton::setOption(option, value);
-    }
+bool WriterAppender::getImmediateFlush() const
+{
+	return _priv->immediateFlush;
 }
 
-
-void WriterAppender::setImmediateFlush(bool value) { 
-    synchronized sync(mutex);
-    immediateFlush = value; 
+const LOG4CXX_NS::helpers::WriterPtr WriterAppender::getWriter() const{
+	return _priv->writer;
 }
