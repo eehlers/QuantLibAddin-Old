@@ -1,0 +1,477 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\action.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\andfilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\appenderattachableimpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\appenderskeleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\aprinitializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\asyncappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\asyncbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\basicconfigurator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\bufferedwriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\bytearrayinputstream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\bytearrayoutputstream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\bytebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\cacheddateformat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\charsetdecoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\charsetencoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\class.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\classnamepatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\classregistration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\colorstartpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\colorendpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\configurator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\consoleappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\cyclicbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\date.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\dateformat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\datepatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\dbappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\defaultconfigurator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\defaultloggerfactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\defaultrepositoryselector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\exception.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\fallbackerrorhandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\file.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\fileappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\filedatepatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\fileinputstream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\filelocationpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\fileoutputstream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\filerenameaction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\filewatchdog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\filter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\filterbasedtriggeringpolicy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\fixedwindowrollingpolicy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\formattinginfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\fulllocationpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\gzcompressaction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\hexdump.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\hierarchy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\htmllayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\inetaddress.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\inputstream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\inputstreamreader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\integer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\integerpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\jsonlayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\layout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\levelmatchfilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\levelpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\levelrangefilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\linelocationpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\lineseparatorpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\literalpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\locale.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\locationinfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\locationinfofilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\loggermatchfilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\loggerpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\loggingevent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\loggingeventpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\loglog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\logmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\logstream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\manualtriggeringpolicy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\mapfilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\mdc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\messagebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\messagepatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\methodlocationpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\nameabbreviator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\namepatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\ndc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\mdcpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\ndcpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\nteventlogappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\odbcappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\onlyonceerrorhandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\optionconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\outputdebugstringappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\outputstream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\outputstreamwriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\patternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\patternlayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\patternparser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\pool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\properties.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\propertiespatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\propertyconfigurator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\propertyresourcebundle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\propertysetter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\reader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\relativetimedateformat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\relativetimepatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\resourcebundle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\rollingfileappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\rollingpolicy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\rollingpolicybase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\rolloverdescription.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\rootlogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\shortfilelocationpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\simpledateformat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\simplelayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\sizebasedtriggeringpolicy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\smtpappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\strftimedateformat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\stringhelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\stringmatchfilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\stringtokenizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\systemerrwriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\systemoutwriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\threadlocal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\threadpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\threadusernamepatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\threadspecificdata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\threadutility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\throwableinformationpatternconverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\timebasedrollingpolicy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\timezone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\transcoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\triggeringpolicy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\writer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\writerappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\xmllayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\zipcompressaction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\datagrampacket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\datagramsocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\aprdatagramsocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\serversocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\aprserversocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\socket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\aprsocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\telnetappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\socketappenderskeleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\socketoutputstream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\xmlsocketappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\syslogwriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\syslogappender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Scratch\ql\log4cxx\src\main\cpp\domconfigurator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Scratch\ql\log4cxx\src\main\cpp\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="C:\Scratch\ql\log4cxx\src\main\cpp\visualstudio.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C:\Scratch\ql\log4cxx\src\main\resources\log4cxx.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{EA52019E-3226-3C7A-BB52-55DE1D12307C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

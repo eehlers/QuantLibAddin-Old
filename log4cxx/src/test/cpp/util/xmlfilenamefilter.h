@@ -20,13 +20,13 @@
 
 #include "filter.h"
 
-namespace log4cxx
+namespace LOG4CXX_NS
 {
-   class XMLFilenameFilter : public Filter
-   {
-   public:
-          XMLFilenameFilter(const std::string& actual, const std::string& expected);
-   };
+class XMLFilenameFilter : public Filter
+{
+	public:
+		XMLFilenameFilter(const std::string& actual, const std::string& expected);
+};
 }
 
 

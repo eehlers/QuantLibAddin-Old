@@ -15,40 +15,38 @@
  * limitations under the License.
  */
 
-#if defined(_MSC_VER)
-#pragma warning ( disable: 4231 4251 4275 4786 )
-#endif
-
-
-
 #include <log4cxx/logstring.h>
 #include <log4cxx/pattern/ndcpatternconverter.h>
 #include <log4cxx/spi/loggingevent.h>
 #include <log4cxx/spi/location/locationinfo.h>
 
-using namespace log4cxx;
-using namespace log4cxx::pattern;
-using namespace log4cxx::spi;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::pattern;
+using namespace LOG4CXX_NS::spi;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(NDCPatternConverter)
 
 NDCPatternConverter::NDCPatternConverter() :
-   LoggingEventPatternConverter(LOG4CXX_STR("NDC"),
-      LOG4CXX_STR("ndc")) {
+	LoggingEventPatternConverter(LOG4CXX_STR("NDC"),
+		LOG4CXX_STR("ndc"))
+{
 }
 
 PatternConverterPtr NDCPatternConverter::newInstance(
-   const std::vector<LogString>& /* options */) {
-   static PatternConverterPtr def(new NDCPatternConverter());
-   return def;
+	const std::vector<LogString>& /* options */)
+{
+	static WideLife<PatternConverterPtr> def = std::make_shared<NDCPatternConverter>();
+	return def;
 }
 
 void NDCPatternConverter::format(
-  const LoggingEventPtr& event,
-  LogString& toAppendTo,
-  Pool& /* p */) const {
-   if(!event->getNDC(toAppendTo)) {
-       toAppendTo.append(LOG4CXX_STR("null"));
-   }
- }
+	const LoggingEventPtr& event,
+	LogString& toAppendTo,
+	Pool& /* p */) const
+{
+	if (!event->getNDC(toAppendTo))
+	{
+		toAppendTo.append(LOG4CXX_STR("null"));
+	}
+}

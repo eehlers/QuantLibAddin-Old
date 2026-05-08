@@ -18,42 +18,54 @@
 #include <log4cxx/appenderskeleton.h>
 #include <vector>
 #include <log4cxx/spi/loggingevent.h>
+#include <log4cxx/private/appenderskeleton_priv.h>
 
-namespace log4cxx
+namespace LOG4CXX_NS
 {
 
 
-        /**
-        An appender that appends logging events to a vector.
-        */
-        class VectorAppender : public AppenderSkeleton
-        {
-        public:
-                DECLARE_LOG4CXX_OBJECT(VectorAppender)
-                BEGIN_LOG4CXX_CAST_MAP()
-                        LOG4CXX_CAST_ENTRY(VectorAppender)
-                        LOG4CXX_CAST_ENTRY_CHAIN(AppenderSkeleton)
-                END_LOG4CXX_CAST_MAP()
+/**
+An appender that appends logging events to a vector.
+*/
+class VectorAppender : public AppenderSkeleton
+{
+	public:
+		DECLARE_LOG4CXX_OBJECT(VectorAppender)
+		BEGIN_LOG4CXX_CAST_MAP()
+		LOG4CXX_CAST_ENTRY(VectorAppender)
+		LOG4CXX_CAST_ENTRY_CHAIN(AppenderSkeleton)
+		END_LOG4CXX_CAST_MAP()
 
-                std::vector<spi::LoggingEventPtr> vector;
+		std::vector<spi::LoggingEventPtr> vector;
+		int appendMillisecondDelay = 0;
 
+		/**
+		This method is called by the AppenderSkeleton#doAppend
+		method.
+		*/
+		void append(const spi::LoggingEventPtr& event, log4cxx::helpers::Pool& p) override;
 
-                /**
-                This method is called by the AppenderSkeleton#doAppend
-                method.
-                */
-                void append(const spi::LoggingEventPtr& event, log4cxx::helpers::Pool& p);
+		const std::vector<spi::LoggingEventPtr>& getVector() const
+		{
+			return this->vector;
+		}
 
-                const std::vector<spi::LoggingEventPtr>& getVector() const
-                        { return vector; }
+		void close() override;
 
-                void close();
+		bool isClosed() const
+		{
+			return m_priv->closed;
+		}
 
-                bool isClosed() const
-                        { return closed; }
+		bool requiresLayout() const override
+		{
+			return false;
+		}
 
-                bool requiresLayout() const
-                        { return false;   }
-        };
-        typedef helpers::ObjectPtrT<VectorAppender> VectorAppenderPtr;
+		void setMillisecondDelay(int milliseconds)
+		{
+			this->appendMillisecondDelay = milliseconds;
+		}
+};
+typedef std::shared_ptr<VectorAppender> VectorAppenderPtr;
 }

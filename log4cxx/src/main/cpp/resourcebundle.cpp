@@ -22,101 +22,98 @@
 #include <log4cxx/helpers/transcoder.h>
 #include <log4cxx/helpers/locale.h>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(ResourceBundle)
 
 ResourceBundlePtr ResourceBundle::getBundle(const LogString& baseName,
-   const Locale& locale)
+	const Locale& locale)
 {
-   LogString bundleName;
-   PropertyResourceBundlePtr resourceBundle, previous;
+	std::vector<LogString> bundlesNames;
 
-   std::vector<LogString> bundlesNames;
+	if (!locale.getVariant().empty())
+	{
+		bundlesNames.push_back(baseName + LOG4CXX_STR("_") +
+			locale.getLanguage() + LOG4CXX_STR("_") +
+			locale.getCountry() + LOG4CXX_STR("_") +
+			locale.getVariant());
+	}
 
-   if (!locale.getVariant().empty())
-   {
-      bundlesNames.push_back(baseName + LOG4CXX_STR("_") +
-         locale.getLanguage() + LOG4CXX_STR("_") +
-         locale.getCountry() + LOG4CXX_STR("_") +
-         locale.getVariant());
-   }
+	if (!locale.getCountry().empty())
+	{
+		bundlesNames.push_back(baseName + LOG4CXX_STR("_") +
+			locale.getLanguage() + LOG4CXX_STR("_") +
+			locale.getCountry());
+	}
 
-   if (!locale.getCountry().empty())
-   {
-      bundlesNames.push_back(baseName + LOG4CXX_STR("_") +
-            locale.getLanguage() + LOG4CXX_STR("_") +
-            locale.getCountry());
-   }
+	if (!locale.getLanguage().empty())
+	{
+		bundlesNames.push_back(baseName + LOG4CXX_STR("_") +
+			locale.getLanguage());
+	}
 
-   if (!locale.getLanguage().empty())
-   {
-      bundlesNames.push_back(baseName + LOG4CXX_STR("_") +
-               locale.getLanguage());
-   }
+	bundlesNames.push_back(baseName);
 
-   bundlesNames.push_back(baseName);
+	PropertyResourceBundlePtr resourceBundle, previous;
+	for (auto bundleName : bundlesNames)
+	{
+		PropertyResourceBundlePtr current;
 
-   for (std::vector<LogString>::iterator it = bundlesNames.begin();
-      it != bundlesNames.end(); it++)
-   {
+		// Try loading a class which implements ResourceBundle
+		try
+		{
+			const Class& classObj = Loader::loadClass(bundleName);
+			ObjectPtr obj = ObjectPtr(classObj.newInstance());
+			current = LOG4CXX_NS::cast<PropertyResourceBundle>(obj);
+		}
+		catch (ClassNotFoundException&)
+		{
+			current.reset();
+		}
 
-      bundleName = *it;
+		// No class found, then try to create a PropertyResourceBundle from a file
+		if (!current)
+		{
+			InputStreamPtr bundleStream =
+				Loader::getResourceAsStream(
+					bundleName + LOG4CXX_STR(".properties"));
 
-      PropertyResourceBundlePtr current;
+			if (!bundleStream)
+			{
+				continue;
+			}
 
-      // Try loading a class which implements ResourceBundle
-      try
-      {
-         const Class& classObj = Loader::loadClass(bundleName);
-         current = classObj.newInstance();
-      }
-      catch(ClassNotFoundException&)
-      {
-         current = 0;
-      }
+			try
+			{
+				current = std::make_shared<PropertyResourceBundle>(bundleStream);
+			}
+			catch (Exception&)
+			{
+				throw;
+			}
+		}
 
-      // No class found, then try to create a PropertyResourceBundle from a file
-      if (current == 0)
-      {
-        InputStreamPtr bundleStream =
-                  Loader::getResourceAsStream(
-                                bundleName + LOG4CXX_STR(".properties"));
-        if (bundleStream == 0) {
-          continue;
-        }
+		// Add the new resource bundle to the hierarchy
+		if (!resourceBundle)
+		{
+			resourceBundle = current;
+			previous = current;
+		}
+		else
+		{
+			previous->setParent(current);
+			previous = current;
+		}
+	}
 
-        try
-        {
-          current = new PropertyResourceBundle(bundleStream);
-        }
-        catch(Exception&)
-        {
-          throw;
-        }
-      }
+	// no resource bundle found at all, then throw exception
+	if (!resourceBundle)
+	{
+		throw MissingResourceException(
+			((LogString) LOG4CXX_STR("Missing resource bundle ")) + baseName);
+	}
 
-      // Add the new resource bundle to the hierarchy
-      if (resourceBundle == 0)
-      {
-         resourceBundle = current;
-         previous = current;
-      }
-      else
-      {
-         previous->setParent(current);
-         previous = current;
-      }
-   }
-
-   // no resource bundle found at all, then throw exception
-   if (resourceBundle == 0)
-   {
-      throw MissingResourceException(
-                      ((LogString) LOG4CXX_STR("Missing resource bundle ")) + baseName);
-   }
-
-   return resourceBundle;
+	return resourceBundle;
 }
 

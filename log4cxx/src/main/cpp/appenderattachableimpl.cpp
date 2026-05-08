@@ -14,147 +14,216 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <log4cxx/logstring.h>
 #include <log4cxx/helpers/appenderattachableimpl.h>
-#include <log4cxx/appender.h>
-#include <log4cxx/spi/loggingevent.h>
 #include <algorithm>
-#include <log4cxx/helpers/pool.h>
+#include <mutex>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
-using namespace log4cxx::spi;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(AppenderAttachableImpl)
 
+using AppenderListPtr = std::shared_ptr<const AppenderList>;
 
+/** A vector of appender pointers. */
+struct AppenderAttachableImpl::priv_data
+{
+private: // Attributes
+#ifdef __cpp_lib_atomic_shared_ptr
+	std::atomic<AppenderListPtr> pAppenderList;
+#else // !defined(__cpp_lib_atomic_shared_ptr)
+	AppenderListPtr    pAppenderList;
+	mutable std::mutex m_mutex;
+#endif // !defined(__cpp_lib_atomic_shared_ptr)
+
+public: // ...structors
+	priv_data(const AppenderList& newList = {})
+		: pAppenderList{ std::make_shared<const AppenderList>(newList) }
+	{}
+
+public: // Accessors
+	AppenderListPtr getAppenders() const
+	{
+#ifdef __cpp_lib_atomic_shared_ptr
+		return pAppenderList.load(std::memory_order_acquire);
+#else // !defined(__cpp_lib_atomic_shared_ptr)
+		std::lock_guard<std::mutex> lock( m_mutex );
+		return pAppenderList;
+#endif // !defined(__cpp_lib_atomic_shared_ptr)
+	}
+
+public: // Modifiers
+	void setAppenders(const AppenderList& newList)
+	{
+#ifdef __cpp_lib_atomic_shared_ptr
+		pAppenderList.store(std::make_shared<AppenderList>(newList), std::memory_order_release);
+#else // !defined(__cpp_lib_atomic_shared_ptr)
+		std::lock_guard<std::mutex> lock( m_mutex );
+		pAppenderList = std::make_shared<const AppenderList>(newList);
+#endif // !defined(__cpp_lib_atomic_shared_ptr)
+	}
+};
+
+AppenderAttachableImpl::AppenderAttachableImpl()
+{
+}
+
+#if LOG4CXX_ABI_VERSION <= 15
 AppenderAttachableImpl::AppenderAttachableImpl(Pool& pool)
-   : appenderList(),
-     mutex(pool) {
-}
-
-void AppenderAttachableImpl::addRef() const {
-    ObjectImpl::addRef();
-}
-
-void AppenderAttachableImpl::releaseRef() const {
-    ObjectImpl::releaseRef();
-}
-
-
-void AppenderAttachableImpl::addAppender(const AppenderPtr& newAppender)
 {
-    // Null values for newAppender parameter are strictly forbidden.
-    if(newAppender == 0)
-    {
-        return;
-    }
-
-    AppenderList::iterator it = std::find(
-        appenderList.begin(), appenderList.end(), newAppender);
-
-    if (it == appenderList.end())
-    {
-        appenderList.push_back(newAppender);
-    }
+}
+#endif
+AppenderAttachableImpl::~AppenderAttachableImpl()
+{
 }
 
-int AppenderAttachableImpl::appendLoopOnAppenders(
-    const spi::LoggingEventPtr& event,
-    Pool& p)
+
+void AppenderAttachableImpl::addAppender(const AppenderPtr newAppender)
 {
-    for (AppenderList::iterator it = appenderList.begin();
-         it != appenderList.end();
-         it++) {
-        (*it)->doAppend(event, p);
-    }
-        return appenderList.size();
+	if (!newAppender)
+		return;
+	if (m_priv)
+	{
+		auto allAppenders = m_priv->getAppenders();
+		if (allAppenders->end() == std::find(allAppenders->begin(), allAppenders->end(), newAppender))
+		{
+			auto newAppenders = *allAppenders;
+			newAppenders.push_back(newAppender);
+			m_priv->setAppenders(newAppenders);
+		}
+	}
+	else
+		m_priv = std::make_unique<priv_data>(AppenderList{newAppender});
+}
+
+int AppenderAttachableImpl::appendLoopOnAppenders(const spi::LoggingEventPtr& event, Pool& p)
+{
+	int result = 0;
+	if (m_priv)
+	{
+		auto allAppenders = m_priv->getAppenders();
+		for (auto& appender : *allAppenders)
+		{
+			appender->doAppend(event, p);
+			++result;
+		}
+	}
+	return result;
 }
 
 AppenderList AppenderAttachableImpl::getAllAppenders() const
 {
-    return appenderList;
+	AppenderList result;
+	if (m_priv)
+		result = *m_priv->getAppenders();
+	return result;
 }
 
 AppenderPtr AppenderAttachableImpl::getAppender(const LogString& name) const
 {
-        if (name.empty())
-        {
-                return 0;
-        }
-
-        AppenderList::const_iterator it, itEnd = appenderList.end();
-        AppenderPtr appender;
-        for(it = appenderList.begin(); it != itEnd; it++)
-        {
-                appender = *it;
-                if(name == appender->getName())
-                {
-                        return appender;
-                }
-        }
-
-        return 0;
+	AppenderPtr result;
+	if (m_priv)
+	{
+		auto allAppenders = m_priv->getAppenders();
+		for (auto& appender : *allAppenders)
+		{
+			if (name == appender->getName())
+			{
+				result = appender;
+				break;
+			}
+		}
+	}
+	return result;
 }
 
-bool AppenderAttachableImpl::isAttached(const AppenderPtr& appender) const
+bool AppenderAttachableImpl::isAttached(const AppenderPtr appender) const
 {
-        if (appender == 0)
-    {
-        return false;
-    }
-
-    AppenderList::const_iterator it = std::find(
-        appenderList.begin(), appenderList.end(), appender);
-
-    return it != appenderList.end();
+	bool result = false;
+	if (m_priv && appender)
+	{
+		auto allAppenders = m_priv->getAppenders();
+		result = allAppenders->end() != std::find(allAppenders->begin(), allAppenders->end(), appender);
+	}
+	return result;
 }
 
 void AppenderAttachableImpl::removeAllAppenders()
 {
-    AppenderList::iterator it, itEnd = appenderList.end();
-    AppenderPtr a;
-    for(it = appenderList.begin(); it != itEnd; it++)
-    {
-        a = *it;
-        a->close();
-    }
-
-    appenderList.clear();
+	if (m_priv)
+	{
+		auto allAppenders = m_priv->getAppenders();
+		for (auto& appender : *allAppenders)
+			appender->close();
+		m_priv->setAppenders({});
+	}
 }
 
-void AppenderAttachableImpl::removeAppender(const AppenderPtr& appender)
+void AppenderAttachableImpl::removeAppender(const AppenderPtr appender)
 {
-    if (appender == 0)
-        return;
-
-    AppenderList::iterator it = std::find(
-        appenderList.begin(), appenderList.end(), appender);
-
-    if (it != appenderList.end())
-    {
-        appenderList.erase(it);
-    }
+	if (m_priv && appender)
+	{
+		auto newAppenders = *m_priv->getAppenders();
+		auto pItem = std::find(newAppenders.begin(), newAppenders.end(), appender);
+		if (newAppenders.end() != pItem)
+		{
+			newAppenders.erase(pItem);
+			m_priv->setAppenders(newAppenders);
+		}
+	}
 }
 
 void AppenderAttachableImpl::removeAppender(const LogString& name)
 {
-        if (name.empty())
-        {
-                return;
-        }
+	if (m_priv)
+	{
+		auto newAppenders = *m_priv->getAppenders();
+		auto pItem = std::find_if(newAppenders.begin(), newAppenders.end()
+			, [&name](const AppenderPtr& appender) -> bool
+			{
+				return name == appender->getName();
+			});
+		if (newAppenders.end() != pItem)
+		{
+			newAppenders.erase(pItem);
+			m_priv->setAppenders(newAppenders);
+		}
+	}
+}
 
-        AppenderList::iterator it, itEnd = appenderList.end();
-        AppenderPtr appender;
-        for(it = appenderList.begin(); it != itEnd; it++)
-        {
-                appender = *it;
-                if(name == appender->getName())
-                {
-                        appenderList.erase(it);
-                        return;
-                }
-        }
+bool AppenderAttachableImpl::replaceAppender(const AppenderPtr& oldAppender, const AppenderPtr& newAppender)
+{
+	bool found = false;
+	if (m_priv && oldAppender && newAppender)
+	{
+		auto name = oldAppender->getName();
+		auto newAppenders = *m_priv->getAppenders();
+		auto pItem = std::find_if(newAppenders.begin(), newAppenders.end()
+			, [&name](const AppenderPtr& appender) -> bool
+			{
+				return name == appender->getName();
+			});
+		if (newAppenders.end() != pItem)
+		{
+			*pItem = newAppender;
+			m_priv->setAppenders(newAppenders);
+			found = true;
+		}
+	}
+	return found;
+}
+
+void AppenderAttachableImpl::replaceAppenders(const AppenderList& newList)
+{
+	if (m_priv)
+	{
+		auto allAppenders = m_priv->getAppenders();
+		for (auto& a : *allAppenders)
+			a->close();
+		m_priv->setAppenders(newList);
+	}
+	else
+		m_priv = std::make_unique<priv_data>(newList);
 }
 
 

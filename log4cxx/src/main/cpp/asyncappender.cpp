@@ -15,350 +15,655 @@
  * limitations under the License.
  */
 
-#if defined(_MSC_VER)
-#pragma warning ( disable: 4231 4251 4275 4786 )
-#endif
-
 #include <log4cxx/asyncappender.h>
-
 
 #include <log4cxx/helpers/loglog.h>
 #include <log4cxx/spi/loggingevent.h>
-#include <apr_thread_proc.h>
-#include <apr_thread_mutex.h>
-#include <apr_thread_cond.h>
-#include <log4cxx/helpers/condition.h>
-#include <log4cxx/helpers/synchronized.h>
 #include <log4cxx/helpers/stringhelper.h>
-#include <apr_atomic.h>
 #include <log4cxx/helpers/optionconverter.h>
+#include <log4cxx/helpers/threadutility.h>
+#include <log4cxx/private/appenderskeleton_priv.h>
+#include <thread>
+#include <atomic>
+#include <condition_variable>
 
+#if LOG4CXX_EVENTS_AT_EXIT
+#include <log4cxx/private/atexitregistry.h>
+#endif
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
-using namespace log4cxx::spi;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
+using namespace LOG4CXX_NS::spi;
+
+#if 15 < LOG4CXX_ABI_VERSION
+namespace
+{
+#endif
+
+/**
+ * The default buffer size is set to 128 events.
+*/
+enum { DEFAULT_BUFFER_SIZE = 128 };
+
+class DiscardSummary
+{
+	private:
+		/**
+		 * First event of the highest severity.
+		*/
+		LoggingEventPtr maxEvent;
+
+		/**
+		* Total count of messages discarded.
+		*/
+		int count;
+
+		/**
+		* Why created
+		*/
+		LogString reason;
+
+	public:
+		/**
+		 * Create new instance.
+		 *
+		 * @param event must not be null.
+		*/
+		DiscardSummary(const LoggingEventPtr& event, const LogString& reason);
+
+		/** Move values from \c src into a new instance.
+		*/
+		DiscardSummary(DiscardSummary&& src);
+#if 15 < LOG4CXX_ABI_VERSION
+		/** Copy constructor.  */
+		DiscardSummary(const DiscardSummary&) = delete;
+		/** Assignment operator. */
+		DiscardSummary& operator=(const DiscardSummary&) = delete;
+#else
+		/**
+		 * Create new instance.
+		 *
+		 * @param event event, may not be null.
+		*/
+		DiscardSummary(const LoggingEventPtr& event);
+		/** Copy constructor.  */
+		DiscardSummary(const DiscardSummary& src);
+		/** Assignment operator. */
+		DiscardSummary& operator=(const DiscardSummary& src);
+#endif
+
+		/**
+		 * Add discarded event to summary.
+		 *
+		 * @param event event, may not be null.
+		*/
+		void add(const LoggingEventPtr& event);
+
+		/**
+		 * Create an event with a discard count and the message from \c maxEvent.
+		 *
+		 * @return the new event.
+		 */
+		LoggingEventPtr createEvent(Pool& p);
+
+#if LOG4CXX_ABI_VERSION <= 15
+		static
+		::LOG4CXX_NS::spi::LoggingEventPtr createEvent(::LOG4CXX_NS::helpers::Pool& p,
+			size_t discardedCount);
+#endif
+
+		/**
+		* The number of messages discarded.
+		*/
+		int getCount() const { return count; }
+};
+
+typedef std::map<LogString, DiscardSummary> DiscardMap;
+
+#if 15 < LOG4CXX_ABI_VERSION
+}
+#endif
+
+#ifdef __cpp_lib_hardware_interference_size
+	using std::hardware_constructive_interference_size;
+	using std::hardware_destructive_interference_size;
+#else
+	// 64 bytes on x86-64 │ L1_CACHE_BYTES │ L1_CACHE_SHIFT │ __cacheline_aligned │ ...
+	constexpr std::size_t hardware_constructive_interference_size = 64;
+	constexpr std::size_t hardware_destructive_interference_size = 64;
+#endif
+
+struct AsyncAppender::AsyncAppenderPriv : public AppenderSkeleton::AppenderSkeletonPrivate
+{
+	AsyncAppenderPriv()
+		: AppenderSkeletonPrivate()
+		, buffer(DEFAULT_BUFFER_SIZE)
+		, bufferSize(DEFAULT_BUFFER_SIZE)
+		, dispatcher()
+		, locationInfo(false)
+		, blocking(true)
+#if LOG4CXX_EVENTS_AT_EXIT
+		, atExitRegistryRaii([this]{stopDispatcher();})
+#endif
+		, eventCount(0)
+		, dispatchedCount(0)
+		, commitCount(0)
+		{ }
+
+	~AsyncAppenderPriv()
+	{
+		stopDispatcher();
+	}
+
+	/**
+	 * Event buffer.
+	*/
+	struct EventData
+	{
+		LoggingEventPtr event;
+		size_t pendingCount;
+	};
+	std::vector<EventData> buffer;
+
+	/**
+	 *  Mutex used to guard access to buffer and discardMap.
+	 */
+	std::mutex bufferMutex;
+
+	std::condition_variable bufferNotFull;
+	std::condition_variable bufferNotEmpty;
+
+	/**
+	  * Map of DiscardSummary objects keyed by logger name.
+	*/
+	DiscardMap discardMap;
+
+	/**
+	 * The maximum number of undispatched events.
+	*/
+	int bufferSize;
+
+	/**
+	 * Nested appenders.
+	*/
+	helpers::AppenderAttachableImpl appenders;
+
+	/**
+	 *  Dispatcher.
+	 */
+	std::thread dispatcher;
+
+	void stopDispatcher()
+	{
+		this->setClosed();
+		bufferNotEmpty.notify_all();
+		bufferNotFull.notify_all();
+
+		if (dispatcher.joinable())
+		{
+			dispatcher.join();
+		}
+	}
+
+	/**
+	 * Should location info be included in dispatched messages.
+	*/
+	bool locationInfo;
+
+	/**
+	 * Does appender block when buffer is full.
+	*/
+	bool blocking;
+
+#if LOG4CXX_EVENTS_AT_EXIT
+	helpers::AtExitRegistry::Raii atExitRegistryRaii;
+#endif
+
+	/**
+	 * Used to calculate the buffer position at which to store the next event.
+	*/
+	alignas(hardware_constructive_interference_size) std::atomic<size_t> eventCount;
+
+	/**
+	 * Used to calculate the buffer position from which to extract the next event.
+	*/
+	alignas(hardware_constructive_interference_size) std::atomic<size_t> dispatchedCount;
+
+	/**
+	 * Used to communicate to the dispatch thread when an event is committed in buffer.
+	*/
+	alignas(hardware_constructive_interference_size) std::atomic<size_t> commitCount;
+
+	bool isClosed()
+	{
+		std::lock_guard<std::mutex> lock(this->bufferMutex);
+		return this->closed;
+	}
+
+	void setClosed()
+	{
+		std::lock_guard<std::mutex> lock(this->bufferMutex);
+		this->closed = true;
+	}
+
+	/**
+	 * Used to ensure the dispatch thread does not wait when a logging thread is waiting.
+	*/
+	alignas(hardware_constructive_interference_size) int blockedCount{0};
+};
 
 
 IMPLEMENT_LOG4CXX_OBJECT(AsyncAppender)
 
+#define priv static_cast<AsyncAppenderPriv*>(m_priv.get())
 
 AsyncAppender::AsyncAppender()
-: AppenderSkeleton(),
-  buffer(),
-  bufferMutex(pool),
-  bufferNotFull(pool),
-  bufferNotEmpty(pool),
-  discardMap(new DiscardMap()),
-  bufferSize(DEFAULT_BUFFER_SIZE),
-  appenders(new AppenderAttachableImpl(pool)),
-  dispatcher(),
-  locationInfo(false),
-  blocking(true) {
-#if APR_HAS_THREADS
-  dispatcher.run(dispatch, this);
-#endif
+	: AppenderSkeleton(std::make_unique<AsyncAppenderPriv>())
+{
 }
 
 AsyncAppender::~AsyncAppender()
 {
-        finalize();
-        delete discardMap;
+	finalize();
 }
 
-void AsyncAppender::addRef() const {
-    ObjectImpl::addRef();
-}
-
-void AsyncAppender::releaseRef() const {
-    ObjectImpl::releaseRef();
-}
-
-void AsyncAppender::addAppender(const AppenderPtr& newAppender)
+void AsyncAppender::addAppender(const AppenderPtr newAppender)
 {
-        synchronized sync(appenders->getMutex());
-        appenders->addAppender(newAppender);
+	priv->appenders.addAppender(newAppender);
 }
 
 
 void AsyncAppender::setOption(const LogString& option,
-        const LogString& value) {
-        if (StringHelper::equalsIgnoreCase(option, LOG4CXX_STR("LOCATIONINFO"), LOG4CXX_STR("locationinfo"))) {
-             setLocationInfo(OptionConverter::toBoolean(value, false));
-        }
-        if (StringHelper::equalsIgnoreCase(option, LOG4CXX_STR("BUFFERSIZE"), LOG4CXX_STR("buffersize"))) {
-             setBufferSize(OptionConverter::toInt(value, DEFAULT_BUFFER_SIZE));
-        }
-        if (StringHelper::equalsIgnoreCase(option, LOG4CXX_STR("BLOCKING"), LOG4CXX_STR("blocking"))) {
-             setBlocking(OptionConverter::toBoolean(value, true));
-        } else {
-             AppenderSkeleton::setOption(option, value);
-        }
+	const LogString& value)
+{
+	if (StringHelper::equalsIgnoreCase(option, LOG4CXX_STR("LOCATIONINFO"), LOG4CXX_STR("locationinfo")))
+	{
+		setLocationInfo(OptionConverter::toBoolean(value, false));
+	}
+
+	if (StringHelper::equalsIgnoreCase(option, LOG4CXX_STR("BUFFERSIZE"), LOG4CXX_STR("buffersize")))
+	{
+		setBufferSize(OptionConverter::toInt(value, DEFAULT_BUFFER_SIZE));
+	}
+
+	if (StringHelper::equalsIgnoreCase(option, LOG4CXX_STR("BLOCKING"), LOG4CXX_STR("blocking")))
+	{
+		setBlocking(OptionConverter::toBoolean(value, true));
+	}
+	else
+	{
+		AppenderSkeleton::setOption(option, value);
+	}
 }
 
 
-void AsyncAppender::append(const spi::LoggingEventPtr& event, Pool& p) {
-#if APR_HAS_THREADS
-       //
-        //   if dispatcher has died then
-        //      append subsequent events synchronously
-        //
-        if (!dispatcher.isAlive() || bufferSize <= 0) {
-            synchronized sync(appenders->getMutex());
-            appenders->appendLoopOnAppenders(event, p);
-            return;
-        }
+void AsyncAppender::doAppend(const spi::LoggingEventPtr& event, Pool& pool1)
+{
+	doAppendImpl(event, pool1);
+}
 
-        // Set the NDC and thread name for the calling thread as these
-        // LoggingEvent fields were not set at event creation time.
-        LogString ndcVal;
-        event->getNDC(ndcVal);
-        event->getThreadName();
-        // Get a copy of this thread's MDC.
-        event->getMDCCopy();
+void AsyncAppender::append(const spi::LoggingEventPtr& event, Pool& p)
+{
+	if (priv->bufferSize <= 0)
+	{
+		priv->appenders.appendLoopOnAppenders(event, p);
+		return;
+	}
 
+	// Get a copy of this thread's diagnostic context
+	event->LoadDC();
 
-        {
-             synchronized sync(bufferMutex);
-             while(true) {
-                 int previousSize = buffer.size();
-                 if (previousSize < bufferSize) {
-                     buffer.push_back(event);
-                     if (previousSize == 0) {
-                        bufferNotEmpty.signalAll();
-                     }
-                     break;
-                 }
-             
-                //
-                //   Following code is only reachable if buffer is full
-                //
-                //
-                //   if blocking and thread is not already interrupted
-                //      and not the dispatcher then
-                //      wait for a buffer notification
-                bool discard = true;
-                if (blocking
-                    && !Thread::interrupted()
-                    && !dispatcher.isCurrentThread()) {
-                    try {
-                        bufferNotFull.await(bufferMutex);
-                        discard = false;
-                    } catch (InterruptedException& ) {
-                        //
-                        //  reset interrupt status so
-                        //    calling code can see interrupt on
-                        //    their next wait or sleep.
-                        Thread::currentThreadInterrupt();
-                    }
-                }
+	if (!priv->dispatcher.joinable())
+	{
+		std::lock_guard<std::recursive_mutex> lock(priv->mutex);
+		if (!priv->dispatcher.joinable())
+			priv->dispatcher = ThreadUtility::instance()->createThread( LOG4CXX_STR("AsyncAppender"), &AsyncAppender::dispatch, this );
+	}
+	if (priv->dispatcher.get_id() == std::this_thread::get_id()) // From an appender attached to this?
+	{
+		std::unique_lock<std::mutex> lock(priv->bufferMutex);
+		auto loggerName = event->getLoggerName();
+		auto iter = priv->discardMap.find(loggerName);
+		if (priv->discardMap.end() == iter)
+			priv->discardMap.emplace(loggerName, DiscardSummary{ event, LOG4CXX_STR("from an attached appender") });
+		else
+			iter->second.add(event);
+	}
+	else while (true)
+	{
+		auto pendingCount = priv->eventCount - priv->dispatchedCount;
+		if (0 <= pendingCount && pendingCount < priv->bufferSize)
+		{
+			// Claim a slot in the ring buffer
+			auto oldEventCount = priv->eventCount++;
+			auto index = oldEventCount % priv->buffer.size();
+			// Wait for a free slot
+			while (priv->bufferSize <= oldEventCount - priv->dispatchedCount)
+				std::this_thread::yield(); // Allow the dispatch thread to free a slot
+			// Write to the ring buffer
+			priv->buffer[index] = AsyncAppenderPriv::EventData{event, pendingCount};
+			// Notify the dispatch thread that an event has been added
+			auto failureCount = 0;
+			auto savedEventCount = oldEventCount;
+			while (!priv->commitCount.compare_exchange_weak(oldEventCount, oldEventCount + 1, std::memory_order_release))
+			{
+				oldEventCount = savedEventCount;
+				if (2 < ++failureCount) // Did the scheduler suspend a thread between claiming a slot and advancing commitCount?
+					std::this_thread::yield(); // Wait a bit
+			}
+			priv->bufferNotEmpty.notify_all();
+			break;
+		}
+		//
+		//   Following code is only reachable if buffer is full or eventCount has overflowed
+		//
+		std::unique_lock<std::mutex> lock(priv->bufferMutex);
+		priv->bufferNotEmpty.notify_all();
+		//
+		//   if blocking and thread is not already interrupted
+		//      and not the dispatcher then
+		//      wait for a buffer notification
+		bool discard = true;
 
-                //
-                //   if blocking is false or thread has been interrupted
-                //   add event to discard map.
-                //
-                if (discard) {
-                    LogString loggerName = event->getLoggerName();
-                    DiscardMap::iterator iter = discardMap->find(loggerName);
-                    if (iter == discardMap->end()) {
-                        DiscardSummary summary(event);
-                        discardMap->insert(DiscardMap::value_type(loggerName, summary));
-                    } else {
-                        (*iter).second.add(event);
-                    }
-                    break;
-                }
-            }
-        }
-#else
-        synchronized sync(appenders->getMutex());
-        appenders->appendLoopOnAppenders(event, p);
-#endif
-  }
-  
+		if (priv->blocking
+			&& !priv->closed)
+		{
+			++priv->blockedCount;
+			priv->bufferNotFull.wait(lock, [this]()
+			{
+				return priv->eventCount - priv->dispatchedCount < priv->bufferSize;
+			});
+			--priv->blockedCount;
+			discard = false;
+		}
 
-void AsyncAppender::close() {
-    {
-        synchronized sync(bufferMutex);
-        closed = true;
-        bufferNotEmpty.signalAll();
-        bufferNotFull.signalAll();
-    }
-    
-#if APR_HAS_THREADS
-    try {
-        dispatcher.join();
-   } catch(InterruptedException& e) {
-        Thread::currentThreadInterrupt();
-        LogLog::error(LOG4CXX_STR("Got an InterruptedException while waiting for the dispatcher to finish,"), e);
-    }
-#endif
-    
-    {
-        synchronized sync(appenders->getMutex());
-        AppenderList appenderList = appenders->getAllAppenders();
-        for (AppenderList::iterator iter = appenderList.begin();
-             iter != appenderList.end();
-             iter++) {
-             (*iter)->close();
-        }
-    }
+		//
+		//   if blocking is false or thread has been interrupted
+		//   add event to discard map.
+		//
+		if (discard)
+		{
+			LogString loggerName = event->getLoggerName();
+			DiscardMap::iterator iter = priv->discardMap.find(loggerName);
+
+			if (iter == priv->discardMap.end())
+			{
+				priv->discardMap.emplace(loggerName, DiscardSummary{ event, LOG4CXX_STR("due to a full event buffer") });
+			}
+			else
+			{
+				iter->second.add(event);
+			}
+
+			break;
+		}
+	}
+}
+
+void AsyncAppender::close()
+{
+	priv->stopDispatcher();
+	for (auto item : priv->appenders.getAllAppenders())
+	{
+		item->close();
+	}
 }
 
 AppenderList AsyncAppender::getAllAppenders() const
 {
-        synchronized sync(appenders->getMutex());
-        return appenders->getAllAppenders();
+	return priv->appenders.getAllAppenders();
 }
 
-AppenderPtr AsyncAppender::getAppender(const LogString& name) const
+AppenderPtr AsyncAppender::getAppender(const LogString& n) const
 {
-        synchronized sync(appenders->getMutex());
-        return appenders->getAppender(name);
+	return priv->appenders.getAppender(n);
 }
 
-bool AsyncAppender::isAttached(const AppenderPtr& appender) const
+bool AsyncAppender::isAttached(const AppenderPtr appender) const
 {
-        synchronized sync(appenders->getMutex());
-        return appenders->isAttached(appender);
+	return priv->appenders.isAttached(appender);
 }
 
-bool AsyncAppender::requiresLayout() const {
-    return false;
+bool AsyncAppender::requiresLayout() const
+{
+	return false;
 }
 
 void AsyncAppender::removeAllAppenders()
 {
-    synchronized sync(appenders->getMutex());
-    appenders->removeAllAppenders();
+	priv->appenders.removeAllAppenders();
 }
 
-void AsyncAppender::removeAppender(const AppenderPtr& appender)
+void AsyncAppender::removeAppender(const AppenderPtr appender)
 {
-    synchronized sync(appenders->getMutex());
-    appenders->removeAppender(appender);
+	priv->appenders.removeAppender(appender);
 }
 
-void AsyncAppender::removeAppender(const LogString& name)
+void AsyncAppender::removeAppender(const LogString& n)
 {
-    synchronized sync(appenders->getMutex());
-    appenders->removeAppender(name);
+	priv->appenders.removeAppender(n);
 }
 
-bool AsyncAppender::getLocationInfo() const {
-    return locationInfo;
+bool AsyncAppender::replaceAppender(const AppenderPtr& oldAppender, const AppenderPtr& newAppender)
+{
+	return priv->appenders.replaceAppender(oldAppender, newAppender);
 }
 
-void AsyncAppender::setLocationInfo(bool flag) {
-    locationInfo = flag;
+void AsyncAppender::replaceAppenders( const AppenderList& newList)
+{
+	priv->appenders.replaceAppenders(newList);
+}
+
+bool AsyncAppender::getLocationInfo() const
+{
+	return priv->locationInfo;
+}
+
+void AsyncAppender::setLocationInfo(bool flag)
+{
+	priv->locationInfo = flag;
 }
 
 
 void AsyncAppender::setBufferSize(int size)
 {
-    if (size < 0) {
-          throw IllegalArgumentException(LOG4CXX_STR("size argument must be non-negative"));
-    }
-    synchronized sync(bufferMutex);
-    bufferSize = (size < 1) ? 1 : size;
-    bufferNotFull.signalAll();
+	if (size < 0)
+	{
+		throw IllegalArgumentException(LOG4CXX_STR("size argument must be non-negative"));
+	}
+
+	std::lock_guard<std::mutex> lock(priv->bufferMutex);
+	priv->bufferSize = (size < 1) ? 1 : size;
+	priv->buffer.resize(priv->bufferSize);
+	priv->bufferNotFull.notify_all();
 }
 
 int AsyncAppender::getBufferSize() const
 {
-        return bufferSize;
+	return priv->bufferSize;
 }
 
-void AsyncAppender::setBlocking(bool value) {
-    synchronized sync(bufferMutex);
-    blocking = value;
-    bufferNotFull.signalAll();
+void AsyncAppender::setBlocking(bool value)
+{
+	std::lock_guard<std::mutex> lock(priv->bufferMutex);
+	priv->blocking = value;
+	priv->bufferNotFull.notify_all();
 }
 
-bool AsyncAppender::getBlocking() const {
-    return blocking;
+bool AsyncAppender::getBlocking() const
+{
+	return priv->blocking;
 }
 
-AsyncAppender::DiscardSummary::DiscardSummary(const LoggingEventPtr& event) : 
-      maxEvent(event), count(1) {
+DiscardSummary::DiscardSummary(const LoggingEventPtr& event, const LogString& reasonArg)
+	: maxEvent(event)
+	, count(1)
+	, reason(reasonArg)
+{
 }
 
-AsyncAppender::DiscardSummary::DiscardSummary(const DiscardSummary& src) : 
-      maxEvent(src.maxEvent), count(src.count) {
+DiscardSummary::DiscardSummary(DiscardSummary&& other)
+	: maxEvent(std::move(other.maxEvent))
+	, count(other.count)
+	, reason(std::move(other.reason))
+{
 }
 
-AsyncAppender::DiscardSummary& AsyncAppender::DiscardSummary::operator=(const DiscardSummary& src) {
-      maxEvent = src.maxEvent;
-      count = src.count; 
-      return *this;
+#if LOG4CXX_ABI_VERSION <= 15
+DiscardSummary::DiscardSummary(const LoggingEventPtr& event) :
+	maxEvent(event), count(1)
+{
 }
 
-void AsyncAppender::DiscardSummary::add(const LoggingEventPtr& event) {
-      if (event->getLevel()->toInt() > maxEvent->getLevel()->toInt()) {
-        maxEvent = event;
-      }
-      count++;
+DiscardSummary::DiscardSummary(const DiscardSummary& src) :
+	maxEvent(src.maxEvent), count(src.count)
+{
 }
 
-LoggingEventPtr AsyncAppender::DiscardSummary::createEvent(Pool& p) {
-    LogString msg(LOG4CXX_STR("Discarded "));
-    StringHelper::toString(count, p, msg);
-    msg.append(LOG4CXX_STR(" messages due to a full event buffer including: "));
-    msg.append(maxEvent->getMessage()); 
-    return new LoggingEvent(   
-              maxEvent->getLoggerName(),
-              maxEvent->getLevel(),
-              msg,
-              LocationInfo::getLocationUnavailable());
+DiscardSummary& DiscardSummary::operator=(const DiscardSummary& src)
+{
+	maxEvent = src.maxEvent;
+	count = src.count;
+	return *this;
+}
+#endif
+
+void DiscardSummary::add(const LoggingEventPtr& event)
+{
+	if (this->maxEvent->getLevel()->toInt() < event->getLevel()->toInt())
+		this->maxEvent = event;
+	++this->count;
 }
 
-
-#if APR_HAS_THREADS
-void* LOG4CXX_THREAD_FUNC AsyncAppender::dispatch(apr_thread_t* thread, void* data) {
-    AsyncAppender* pThis = (AsyncAppender*) data;
-    bool isActive = true;
-    try {
-        while (isActive) {
-             //
-             //   process events after lock on buffer is released.
-             //
-            Pool p;
-            LoggingEventList events;
-            {
-                   synchronized sync(pThis->bufferMutex);
-                   size_t bufferSize = pThis->buffer.size();
-                   isActive = !pThis->closed;
-               
-                   while((bufferSize == 0) && isActive) {
-                       pThis->bufferNotEmpty.await(pThis->bufferMutex);
-                       bufferSize = pThis->buffer.size();
-                       isActive = !pThis->closed;
-                   }
-                   for(LoggingEventList::iterator eventIter = pThis->buffer.begin();
-                       eventIter != pThis->buffer.end();
-                       eventIter++) {
-                       events.push_back(*eventIter);
-                   }
-                   for(DiscardMap::iterator discardIter = pThis->discardMap->begin();
-                       discardIter != pThis->discardMap->end();
-                       discardIter++) {
-                       events.push_back(discardIter->second.createEvent(p));
-                   }
-                   pThis->buffer.clear();
-                   pThis->discardMap->clear();
-                   pThis->bufferNotFull.signalAll();
-            }
-            
-            for (LoggingEventList::iterator iter = events.begin();
-                 iter != events.end();
-                 iter++) {
-                 synchronized sync(pThis->appenders->getMutex());
-                 pThis->appenders->appendLoopOnAppenders(*iter, p);
-            }
-        }
-    } catch(InterruptedException& ) {
-            Thread::currentThreadInterrupt();
-    } catch(...) {
-    }
-    return 0;
+LoggingEventPtr DiscardSummary::createEvent(Pool& p)
+{
+	LogString msg(LOG4CXX_STR("Discarded "));
+	StringHelper::toString(this->count, p, msg);
+	msg.append(LOG4CXX_STR(" messages ") + this->reason + LOG4CXX_STR(" including: "));
+	msg.append(this->maxEvent->getRenderedMessage());
+	return std::make_shared<LoggingEvent>
+		( this->maxEvent->getLoggerName()
+		, this->maxEvent->getLevel()
+		, msg
+		, LocationInfo::getLocationUnavailable()
+		);
 }
-#endif                
+
+#if LOG4CXX_ABI_VERSION <= 15
+::LOG4CXX_NS::spi::LoggingEventPtr
+DiscardSummary::createEvent(::LOG4CXX_NS::helpers::Pool& p,
+	size_t discardedCount)
+{
+	LogString msg(LOG4CXX_STR("Discarded "));
+	StringHelper::toString(discardedCount, p, msg);
+	msg.append(LOG4CXX_STR(" messages due to a full event buffer"));
+
+	return std::make_shared<LoggingEvent>(
+				LOG4CXX_STR(""),
+				LOG4CXX_NS::Level::getError(),
+				msg,
+				LocationInfo::getLocationUnavailable() );
+}
+#endif
+
+
+void AsyncAppender::dispatch()
+{
+	size_t discardCount = 0;
+	size_t iterationCount = 0;
+	size_t waitCount = 0;
+	size_t blockedCount = 0;
+	std::vector<size_t> pendingCountHistogram(priv->bufferSize, 0);
+	bool isActive = true;
+
+	while (isActive)
+	{
+		Pool p;
+		LoggingEventList events;
+		events.reserve(priv->bufferSize);
+		for (int count = 0; count < 2 && priv->dispatchedCount == priv->commitCount; ++count)
+			std::this_thread::yield(); // Wait a bit
+		if (priv->dispatchedCount == priv->commitCount)
+		{
+			++waitCount;
+			std::unique_lock<std::mutex> lock(priv->bufferMutex);
+			priv->bufferNotEmpty.wait(lock, [this]() -> bool
+				{ return 0 < priv->blockedCount || priv->dispatchedCount != priv->commitCount || priv->closed; }
+			);
+		}
+		isActive = !priv->isClosed();
+
+		while (events.size() < priv->bufferSize && priv->dispatchedCount != priv->commitCount)
+		{
+			auto index = priv->dispatchedCount % priv->buffer.size();
+			const auto& data = priv->buffer[index];
+			events.push_back(data.event);
+			if (data.pendingCount < pendingCountHistogram.size())
+				++pendingCountHistogram[data.pendingCount];
+			++priv->dispatchedCount;
+		}
+		priv->bufferNotFull.notify_all();
+		{
+			std::lock_guard<std::mutex> lock(priv->bufferMutex);
+			blockedCount += priv->blockedCount;
+			for (auto& discardItem : priv->discardMap)
+			{
+				events.push_back(discardItem.second.createEvent(p));
+				discardCount += discardItem.second.getCount();
+			}
+			priv->discardMap.clear();
+		}
+
+		for (auto item : events)
+		{
+			try
+			{
+				priv->appenders.appendLoopOnAppenders(item, p);
+			}
+			catch (std::exception& ex)
+			{
+				if (!priv->isClosed())
+				{
+					priv->errorHandler->error(LOG4CXX_STR("async dispatcher"), ex, 0, item);
+					isActive = false;
+				}
+			}
+			catch (...)
+			{
+				if (!priv->isClosed())
+				{
+					priv->errorHandler->error(LOG4CXX_STR("async dispatcher"));
+					isActive = false;
+				}
+			}
+		}
+		++iterationCount;
+	}
+	if (LogLog::isDebugEnabled())
+	{
+		Pool p;
+		LogString msg(LOG4CXX_STR("[") + getName() + LOG4CXX_STR("] AsyncAppender"));
+#ifdef _DEBUG
+		msg += LOG4CXX_STR(" iterationCount ");
+		StringHelper::toString(iterationCount, p, msg);
+		msg += LOG4CXX_STR(" waitCount ");
+		StringHelper::toString(waitCount, p, msg);
+		msg += LOG4CXX_STR(" blockedCount ");
+		StringHelper::toString(blockedCount, p, msg);
+		msg += LOG4CXX_STR(" commitCount ");
+		StringHelper::toString(priv->commitCount, p, msg);
+#endif
+		msg += LOG4CXX_STR(" dispatchedCount ");
+		StringHelper::toString(priv->dispatchedCount, p, msg);
+		msg += LOG4CXX_STR(" discardCount ");
+		StringHelper::toString(discardCount, p, msg);
+		msg += LOG4CXX_STR(" pendingCountHistogram");
+		for (auto item : pendingCountHistogram)
+		{
+			msg += logchar(' ');
+			StringHelper::toString(item, p, msg);
+		}
+		LogLog::debug(msg);
+	}
+
+}

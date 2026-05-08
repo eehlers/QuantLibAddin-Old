@@ -18,76 +18,154 @@
 #include <log4cxx/logstring.h>
 #include <log4cxx/helpers/filewatchdog.h>
 #include <log4cxx/helpers/loglog.h>
-#include <apr_time.h>
-#include <apr_thread_proc.h>
-#include <apr_atomic.h>
 #include <log4cxx/helpers/transcoder.h>
+#include <log4cxx/helpers/exception.h>
+#include <log4cxx/helpers/threadutility.h>
+#include <log4cxx/helpers/stringhelper.h>
+#include <functional>
+#include <chrono>
+#include <thread>
+#include <condition_variable>
 
-
-using namespace log4cxx;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
 
 long FileWatchdog::DEFAULT_DELAY = 60000;
 
-#if APR_HAS_THREADS
+struct FileWatchdog::FileWatchdogPrivate{
+	FileWatchdogPrivate(const File& file1) :
+		file(file1), delay(DEFAULT_DELAY), lastModif(0),
+		warnedAlready(false),
+		taskName{ LOG4CXX_STR("WatchDog_") + file1.getName() }
+	{ }
+
+
+	/**
+	The name of the file to observe  for changes.
+	*/
+	File file;
+
+	/**
+	The delay to observe between every check.
+	By default set DEFAULT_DELAY.*/
+	long delay;
+	log4cxx_time_t lastModif;
+	bool warnedAlready;
+	LogString taskName;
+	ThreadUtility::ManagerWeakPtr taskManager;
+};
 
 FileWatchdog::FileWatchdog(const File& file1)
- : file(file1), delay(DEFAULT_DELAY), lastModif(0),
-warnedAlready(false), interrupted(0), thread()
+	: m_priv(std::make_unique<FileWatchdogPrivate>(file1))
 {
 }
 
-FileWatchdog::~FileWatchdog() {
-   apr_atomic_set32(&interrupted, 0xFFFF);
-   thread.join();
+FileWatchdog::~FileWatchdog()
+{
+	stop();
+}
+
+
+bool FileWatchdog::is_active()
+{
+	bool result = false;
+	if (auto p = m_priv->taskManager.lock())
+		result = p->value().hasPeriodicTask(m_priv->taskName);
+	return result;
+}
+
+void FileWatchdog::stop()
+{
+	if (auto p = m_priv->taskManager.lock())
+		p->value().removePeriodicTask(m_priv->taskName);
+}
+
+/**
+Stop all tasks that periodically checks for a file change.
+*/
+void FileWatchdog::stopAll()
+{
+	ThreadUtility::instance()->removePeriodicTasksMatching(LOG4CXX_STR("WatchDog_"));
+}
+
+const File& FileWatchdog::file()
+{
+	return m_priv->file;
 }
 
 void FileWatchdog::checkAndConfigure()
 {
-    Pool pool1;
-   if (!file.exists(pool1))
-   {
-              if(!warnedAlready)
-              {
-                      LogLog::debug(((LogString) LOG4CXX_STR("["))
-                         + file.getPath()
-                         + LOG4CXX_STR("] does not exist."));
-                      warnedAlready = true;
-              }
-   }
-   else
-   {
-        apr_time_t thisMod = file.lastModified(pool1);
-      if (thisMod > lastModif)
-      {
-         lastModif = thisMod;
-         doOnChange();
-         warnedAlready = false;
-      }
-   }
-}
+	if (LogLog::isDebugEnabled())
+	{
+		LogString msg(LOG4CXX_STR("Checking ["));
+		msg += m_priv->file.getPath();
+		msg += LOG4CXX_STR("]");
+		LogLog::debug(msg);
+	}
+	Pool pool1;
 
-void* APR_THREAD_FUNC FileWatchdog::run(apr_thread_t* /* thread */, void* data) {
-   FileWatchdog* pThis = (FileWatchdog*) data;
+	if (!m_priv->file.exists(pool1))
+	{
+		if (!m_priv->warnedAlready)
+		{
+			LogLog::warn(LOG4CXX_STR("[")
+				+ m_priv->file.getPath()
+				+ LOG4CXX_STR("] does not exist."));
+			m_priv->warnedAlready = true;
+		}
+	}
+	else
+	{
+		auto thisMod = m_priv->file.lastModified(pool1);
 
-   unsigned int interrupted = apr_atomic_read32(&pThis->interrupted);
-    while(!interrupted)
-   {
-      apr_sleep(APR_INT64_C(1000) * pThis->delay);
-      interrupted = apr_atomic_read32(&pThis->interrupted);
-      if (!interrupted) {
-        pThis->checkAndConfigure();
-        interrupted = apr_atomic_read32(&pThis->interrupted);
-      }
-    }
-   return NULL;
+		if (thisMod > m_priv->lastModif)
+		{
+			m_priv->lastModif = thisMod;
+			doOnChange();
+			m_priv->warnedAlready = false;
+		}
+	}
 }
 
 void FileWatchdog::start()
 {
-   checkAndConfigure();
-
-   thread.run(run, this);
+	auto taskManager = ThreadUtility::instancePtr();
+	checkAndConfigure();
+	if (!taskManager->value().hasPeriodicTask(m_priv->taskName))
+	{
+		if (LogLog::isDebugEnabled())
+		{
+			Pool p;
+			LogString msg(LOG4CXX_STR("Checking ["));
+			msg += m_priv->file.getPath();
+			msg += LOG4CXX_STR("] at ");
+			StringHelper::toString((int)m_priv->delay, p, msg);
+			msg += LOG4CXX_STR(" ms interval");
+			LogLog::debug(msg);
+		}
+		taskManager->value().addPeriodicTask(m_priv->taskName
+			, std::bind(&FileWatchdog::checkAndConfigure, this)
+			, std::chrono::milliseconds(m_priv->delay)
+			);
+		m_priv->taskManager = taskManager;
+	}
 }
 
-#endif
+void FileWatchdog::setDelay(long delay1){
+	m_priv->delay = delay1;
+	auto p = m_priv->taskManager.lock();
+	if (p && p->value().hasPeriodicTask(m_priv->taskName))
+	{
+		p->value().removePeriodicTask(m_priv->taskName);
+		p->value().addPeriodicTask(m_priv->taskName
+			, std::bind(&FileWatchdog::checkAndConfigure, this)
+			, std::chrono::milliseconds(m_priv->delay)
+			);
+	}
+}
+
+void FileWatchdog::setFile(const File& filename)
+{
+    m_priv->file = filename;
+	m_priv->lastModif = 0;
+}

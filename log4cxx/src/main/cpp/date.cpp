@@ -16,38 +16,58 @@
  */
 #include <log4cxx/logstring.h>
 #include <log4cxx/helpers/date.h>
+#include <chrono>
 
-
+#define LOG4CXX_USEC_PER_SEC 1000000LL
 #ifndef INT64_C
-#define INT64_C(x) x ## LL
+	#define INT64_C(x) x ## LL
 #endif
 
-
-#include <apr_time.h>
-using namespace log4cxx;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(Date)
 
-
-Date::Date() : time(apr_time_now()) {
+namespace {
+Date::GetCurrentTimeFn getCurrentTimeFn = 0;
 }
 
-Date::Date(log4cxx_time_t t) : time(t) {
+Date::Date() : time(currentTime())
+{
 }
 
-Date::~Date() {
+Date::Date(log4cxx_time_t t) : time(t)
+{
 }
 
-log4cxx_time_t Date::getMicrosecondsPerDay() {
-   return APR_INT64_C(86400000000);
+Date::~Date()
+{
 }
 
-log4cxx_time_t Date::getMicrosecondsPerSecond() {
-   return APR_USEC_PER_SEC;
+log4cxx_time_t Date::getMicrosecondsPerDay()
+{
+	return 86400000000ull;
+}
+
+log4cxx_time_t Date::getMicrosecondsPerSecond()
+{
+	return LOG4CXX_USEC_PER_SEC;
 }
 
 
-log4cxx_time_t Date::getNextSecond() const {
-    return ((time / APR_USEC_PER_SEC) + 1) * APR_USEC_PER_SEC;
+log4cxx_time_t Date::getNextSecond() const
+{
+	return ((time / LOG4CXX_USEC_PER_SEC) + 1) * LOG4CXX_USEC_PER_SEC;
+}
+
+void Date::setGetCurrentTimeFunction(GetCurrentTimeFn fn){
+	getCurrentTimeFn = fn;
+}
+
+log4cxx_time_t Date::currentTime(){
+	return getCurrentTimeFn ? getCurrentTimeFn() : getCurrentTimeStd();
+}
+
+log4cxx_time_t Date::getCurrentTimeStd(){
+	return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }

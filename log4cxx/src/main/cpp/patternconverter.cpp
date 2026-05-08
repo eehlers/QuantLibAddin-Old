@@ -14,37 +14,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(_MSC_VER)
-#pragma warning ( disable: 4231 4251 4275 4786 )
-#endif
 
 #include <log4cxx/logstring.h>
 #include <log4cxx/pattern/patternconverter.h>
 #include <log4cxx/helpers/transcoder.h>
+#include <log4cxx/private/patternconverter_priv.h>
 
-using namespace log4cxx;
-using namespace log4cxx::pattern;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::pattern;
 
 IMPLEMENT_LOG4CXX_OBJECT(PatternConverter)
 
 PatternConverter::PatternConverter(
-   const LogString& name1, const LogString& style1) :
-   name(name1), style(style1) {
+	std::unique_ptr<PatternConverterPrivate> priv) :
+	m_priv(std::move(priv))
+{
 }
 
-PatternConverter::~PatternConverter() {
+PatternConverter::PatternConverter(const LogString& name,
+	const LogString& style) :
+	m_priv(std::make_unique<PatternConverterPrivate>(name, style))
+{
+
 }
 
-LogString PatternConverter::getName() const {
-    return name;
+PatternConverter::~PatternConverter()
+{
 }
 
-LogString PatternConverter::getStyleClass(const log4cxx::helpers::ObjectPtr& /* e */) const {
-    return style;
-  }
+LogString PatternConverter::getName() const
+{
+	return m_priv->name;
+}
 
-void PatternConverter::append(LogString& toAppendTo, const std::string& src) {
-  LOG4CXX_DECODE_CHAR(decoded, src);
-  toAppendTo.append(decoded);
+LogString PatternConverter::getStyleClass(const LOG4CXX_NS::helpers::ObjectPtr& /* e */) const
+{
+	return m_priv->style;
+}
+
+void PatternConverter::append(LogString& toAppendTo, const std::string& src)
+{
+	LOG4CXX_DECODE_CHAR(decoded, src);
+	toAppendTo.append(decoded);
 }
 

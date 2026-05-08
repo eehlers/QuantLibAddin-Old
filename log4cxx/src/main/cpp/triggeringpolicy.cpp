@@ -17,19 +17,12 @@
 
 #include <log4cxx/rolling/triggeringpolicy.h>
 
-using namespace log4cxx;
-using namespace log4cxx::rolling;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::rolling;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(TriggeringPolicy)
 
-TriggeringPolicy::~TriggeringPolicy() {
-}
-
-void TriggeringPolicy::addRef() const {
-    ObjectImpl::addRef();
-}
-
-void TriggeringPolicy::releaseRef() const {
-    ObjectImpl::releaseRef();
+TriggeringPolicy::~TriggeringPolicy()
+{
 }

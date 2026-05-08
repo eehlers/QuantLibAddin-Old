@@ -17,33 +17,39 @@
 
 #include <log4cxx/logstring.h>
 #include <log4cxx/spi/filter.h>
+#include <log4cxx/private/filter_priv.h>
 
-using namespace log4cxx;
-using namespace log4cxx::spi;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::spi;
+using namespace LOG4CXX_NS::helpers;
 
-Filter::Filter() : next() {
+Filter::Filter() : m_priv(std::make_unique<FilterPrivate>())
+{
 }
 
-void Filter::addRef() const {
-    ObjectImpl::addRef();
+Filter::Filter(std::unique_ptr<FilterPrivate> priv) :
+	m_priv(std::move(priv))
+{
+
 }
 
-void Filter::releaseRef() const {
-    ObjectImpl::releaseRef();
+Filter::~Filter() {}
+
+FilterPtr Filter::getNext() const
+{
+	return m_priv->next;
 }
 
-FilterPtr Filter::getNext() const {
-   return next;
+void Filter::setNext(const FilterPtr& newNext)
+{
+	m_priv->next = newNext;
 }
 
-void Filter::setNext(const FilterPtr& newNext) {
-    next = newNext;
+void Filter::activateOptions(Pool&)
+{
 }
 
-void Filter::activateOptions(Pool&) {
-}
-
-void Filter::setOption(const LogString&, const LogString&) {
+void Filter::setOption(const LogString&, const LogString&)
+{
 }
 

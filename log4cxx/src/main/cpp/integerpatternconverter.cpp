@@ -14,39 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(_MSC_VER)
-#pragma warning ( disable: 4231 4251 4275 4786 )
-#endif
-
 
 #include <log4cxx/logstring.h>
 #include <log4cxx/pattern/integerpatternconverter.h>
 #include <log4cxx/helpers/integer.h>
 #include <log4cxx/helpers/stringhelper.h>
 
-using namespace log4cxx;
-using namespace log4cxx::pattern;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::pattern;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(IntegerPatternConverter)
 
 IntegerPatternConverter::IntegerPatternConverter() :
-   PatternConverter(LOG4CXX_STR("Integer"),
-      LOG4CXX_STR("integer")) {
+	PatternConverter(LOG4CXX_STR("Integer"),
+		LOG4CXX_STR("integer"))
+{
 }
 
 PatternConverterPtr IntegerPatternConverter::newInstance(
-   const std::vector<LogString>& /* options */) {
-   static PatternConverterPtr instance(new IntegerPatternConverter());
-   return instance;
+	const std::vector<LogString>& /* options */)
+{
+	static WideLife<PatternConverterPtr> instance = std::make_shared<IntegerPatternConverter>();
+	return instance;
 }
 
 void IntegerPatternConverter::format(
-  const ObjectPtr& obj,
-  LogString& toAppendTo,
-  Pool& p) const {
-   IntegerPtr i(obj);
-   if (i != NULL) {
-      StringHelper::toString(i->intValue(), p, toAppendTo);
-   }
+	const ObjectPtr& obj,
+	LogString& toAppendTo,
+	Pool& p) const
+{
+	IntegerPtr i = LOG4CXX_NS::cast<Integer>(obj);
+
+	if (i != NULL)
+	{
+		StringHelper::toString(i->intValue(), p, toAppendTo);
+	}
 }

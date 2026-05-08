@@ -33,10 +33,10 @@
 #include <log4cxx/helpers/transcoder.h>
 #include <log4cxx/helpers/fileinputstream.h>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
-using namespace log4cxx::spi;
-using namespace log4cxx::filter;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
+using namespace LOG4CXX_NS::spi;
+using namespace LOG4CXX_NS::filter;
 
 IMPLEMENT_LOG4CXX_OBJECT(Object)
 IMPLEMENT_LOG4CXX_OBJECT(OptionHandler)
@@ -56,16 +56,20 @@ IMPLEMENT_LOG4CXX_OBJECT(TriggeringEventEvaluator)
 
 const Class& Loader::loadClass(const LogString& clazz)
 {
-   return Class::forName(clazz);
+	return Class::forName(clazz);
 }
 
 
-InputStreamPtr Loader::getResourceAsStream(const LogString& name) {
+InputStreamPtr Loader::getResourceAsStream(const LogString& name)
+{
 
-  try {
-    return new FileInputStream(name);
-  } catch(const IOException& ) {
-  }
+	try
+	{
+		return std::make_shared<FileInputStream>(name);
+	}
+	catch (const IOException&)
+	{
+	}
 
-  return 0;
+	return 0;
 }

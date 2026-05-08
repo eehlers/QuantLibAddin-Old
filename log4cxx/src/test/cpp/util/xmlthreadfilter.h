@@ -20,13 +20,13 @@
 
 #include "filter.h"
 
-namespace log4cxx
+namespace LOG4CXX_NS
 {
-   class XMLThreadFilter : public Filter
-   {
-   public:
-       XMLThreadFilter();
-   };
+class XMLThreadFilter : public Filter
+{
+	public:
+		XMLThreadFilter();
+};
 }
 
 

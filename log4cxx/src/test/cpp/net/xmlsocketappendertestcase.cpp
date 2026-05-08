@@ -16,33 +16,48 @@
  */
 
 #include <log4cxx/net/xmlsocketappender.h>
+#include <log4cxx/xml/domconfigurator.h>
 #include "../appenderskeletontestcase.h"
+#include "apr.h"
 
 using namespace log4cxx;
 using namespace log4cxx::helpers;
 
-#if APR_HAS_THREADS
 /**
    Unit tests of log4cxx::net::XMLSocketAppender
  */
 class XMLSocketAppenderTestCase : public AppenderSkeletonTestCase
 {
-   LOGUNIT_TEST_SUITE(XMLSocketAppenderTestCase);
-                //
-                //    tests inherited from AppenderSkeletonTestCase
-                //
-                LOGUNIT_TEST(testDefaultThreshold);
-                LOGUNIT_TEST(testSetOptionThreshold);
+		LOGUNIT_TEST_SUITE(XMLSocketAppenderTestCase);
+		//
+		//    tests inherited from AppenderSkeletonTestCase
+		//
+		LOGUNIT_TEST(testDefaultThreshold);
+		LOGUNIT_TEST(testSetOptionThreshold);
+		//LOGUNIT_TEST(test_fluent_bit);
 
-   LOGUNIT_TEST_SUITE_END();
+		LOGUNIT_TEST_SUITE_END();
 
 
-public:
+	public:
 
-        AppenderSkeleton* createAppenderSkeleton() const {
-          return new log4cxx::net::XMLSocketAppender();
-        }
+		AppenderSkeleton* createAppenderSkeleton() const
+		{
+			return new log4cxx::net::XMLSocketAppender();
+		}
+
+		void test_fluent_bit()
+		{
+			auto status = xml::DOMConfigurator::configure("input/xml/fluent-bit.xml");
+			LOGUNIT_ASSERT_EQUAL(status, spi::ConfigurationStatus::Configured);
+			auto log = Logger::getRootLogger();
+			for (int i = 0; i < 100; ++i)
+			{
+				LOG4CXX_INFO(log, "Message '" << i << "'");
+			}
+			LOG4CXX_INFO(log, "Last message");
+		}
 };
 
 LOGUNIT_TEST_SUITE_REGISTRATION(XMLSocketAppenderTestCase);
-#endif
+

@@ -20,14 +20,14 @@
 
 #include "filter.h"
 
-namespace log4cxx
+namespace LOG4CXX_NS
 {
-   class FilenameFilter : public Filter
-   {
-   public:
-        FilenameFilter(const std::string& actual, const std::string& expected);
-        static const std::string getMatch(const std::string& actual);
-   };
+class FilenameFilter : public Filter
+{
+	public:
+		FilenameFilter(const std::string& actual, const std::string& expected);
+		static const std::string getMatch(const std::string& actual);
+};
 }
 
 

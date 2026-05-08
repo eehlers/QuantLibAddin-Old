@@ -1,0 +1,10 @@
+C:/Scratch/ql/log4cxx/build/CMakeFiles/INSTALL.dir
+C:/Scratch/ql/log4cxx/build/CMakeFiles/ALL_BUILD.dir
+C:/Scratch/ql/log4cxx/build/CMakeFiles/ZERO_CHECK.dir
+C:/Scratch/ql/log4cxx/build/src/CMakeFiles/INSTALL.dir
+C:/Scratch/ql/log4cxx/build/src/main/CMakeFiles/INSTALL.dir
+C:/Scratch/ql/log4cxx/build/src/main/include/CMakeFiles/log4cxx-include.dir
+C:/Scratch/ql/log4cxx/build/src/main/include/CMakeFiles/INSTALL.dir
+C:/Scratch/ql/log4cxx/build/src/main/cpp/CMakeFiles/log4cxx.dir
+C:/Scratch/ql/log4cxx/build/src/main/cpp/CMakeFiles/INSTALL.dir
+C:/Scratch/ql/log4cxx/build/src/main/resources/CMakeFiles/INSTALL.dir

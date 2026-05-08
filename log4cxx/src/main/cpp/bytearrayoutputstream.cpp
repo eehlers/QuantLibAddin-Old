@@ -21,32 +21,43 @@
 #include <log4cxx/helpers/bytebuffer.h>
 #include <string.h>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
+
+struct ByteArrayOutputStream::ByteArrayOutputStreamPriv
+{
+	ByteList array;
+};
 
 IMPLEMENT_LOG4CXX_OBJECT(ByteArrayOutputStream)
 
-ByteArrayOutputStream::ByteArrayOutputStream() {
+ByteArrayOutputStream::ByteArrayOutputStream()
+{
 }
 
-ByteArrayOutputStream::~ByteArrayOutputStream() {
+ByteArrayOutputStream::~ByteArrayOutputStream()
+{
 }
 
-void ByteArrayOutputStream::close(Pool& /* p */) {
+void ByteArrayOutputStream::close(Pool& /* p */)
+{
 }
 
-void ByteArrayOutputStream::flush(Pool& /* p */) {
+void ByteArrayOutputStream::flush(Pool& /* p */)
+{
 }
 
-void ByteArrayOutputStream::write(ByteBuffer& buf, Pool& /* p */ ) {
-  size_t sz = array.size();
-  array.resize(sz + buf.remaining());
-  memcpy(&array[sz], buf.current(), buf.remaining());
-  buf.position(buf.limit());
+void ByteArrayOutputStream::write(ByteBuffer& buf, Pool& /* p */ )
+{
+	size_t sz = m_priv->array.size();
+	m_priv->array.resize(sz + buf.remaining());
+	memcpy(&m_priv->array[sz], buf.current(), buf.remaining());
+	buf.position(buf.limit());
 }
 
-std::vector<unsigned char> ByteArrayOutputStream::toByteArray() const {
-  return array;
+std::vector<unsigned char> ByteArrayOutputStream::toByteArray() const
+{
+	return m_priv->array;
 }
 
 

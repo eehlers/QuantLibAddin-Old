@@ -16,54 +16,67 @@
  */
 #include <log4cxx/logstring.h>
 #include <log4cxx/rolling/action.h>
-#include <log4cxx/helpers/synchronized.h>
+#include <log4cxx/private/action_priv.h>
+#include <mutex>
+#include <memory>
 
-using namespace log4cxx;
-using namespace log4cxx::rolling;
-using namespace log4cxx::helpers;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::rolling;
+using namespace LOG4CXX_NS::helpers;
 
 IMPLEMENT_LOG4CXX_OBJECT(Action)
 
 Action::Action() :
-   complete(false),
-   interrupted(false),
-   pool(),
-   mutex(pool) {
+	m_priv( std::make_unique<Action::ActionPrivate>() )
+{
 }
 
-Action::~Action() {
+Action::Action( std::unique_ptr<ActionPrivate> priv ) :
+	m_priv( std::move(priv) ) {}
+
+Action::~Action()
+{
 }
 
 /**
  * {@inheritDoc}
  */
-void Action::run(log4cxx::helpers::Pool& pool1) {
-  synchronized sync(mutex);
-  if (!interrupted) {
-      try {
-         execute(pool1);
-      } catch(std::exception& ex) {
-         reportException(ex);
-      }
-      complete = true;
-      interrupted = true;
-  }
+void Action::run(LOG4CXX_NS::helpers::Pool& pool1)
+{
+	std::lock_guard<std::mutex> lock(m_priv->mutex);
+
+	if (!m_priv->interrupted)
+	{
+		try
+		{
+			execute(pool1);
+		}
+		catch (std::exception& ex)
+		{
+			reportException(ex);
+		}
+
+		m_priv->complete = true;
+		m_priv->interrupted = true;
+	}
 }
 
-  /**
-   * {@inheritDoc}
-   */
-void Action::close() {
-    synchronized sync(mutex);
-    interrupted = true;
+/**
+ * {@inheritDoc}
+ */
+void Action::close()
+{
+	std::lock_guard<std::mutex> lock(m_priv->mutex);
+	m_priv->interrupted = true;
 }
 
-  /**
-   * Tests if the action is complete.
-   * @return true if action is complete.
-   */
-bool Action::isComplete() const {
-    return complete;
+/**
+ * Tests if the action is complete.
+ * @return true if action is complete.
+ */
+bool Action::isComplete() const
+{
+	return m_priv->complete;
 }
 
 /**
@@ -71,5 +84,6 @@ bool Action::isComplete() const {
  *
  * @param ex exception.
  */
-void Action::reportException(const std::exception& /* ex */) {
+void Action::reportException(const std::exception& /* ex */)
+{
 }

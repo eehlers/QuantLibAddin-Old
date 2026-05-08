@@ -21,6 +21,8 @@
 
 #include <log4cxx/logmanager.h>
 #include <log4cxx/logger.h>
+#include <log4cxx/helpers/pool.h>
+#include <apr_file_io.h>
 #include "../insertwide.h"
 #include "../logunit.h"
 
@@ -28,34 +30,38 @@ using namespace log4cxx;
 
 LOGUNIT_CLASS(TestCase4)
 {
-   LOGUNIT_TEST_SUITE(TestCase4);
-      LOGUNIT_TEST(combinedTest);
-   LOGUNIT_TEST_SUITE_END();
+	LOGUNIT_TEST_SUITE(TestCase4);
+	LOGUNIT_TEST(combinedTest);
+	LOGUNIT_TEST_SUITE_END();
 
 public:
-   void setUp()
-   {
-   }
+	void setUp()
+	{
+		helpers::Pool p;
+		apr_file_copy("input/xml/defaultInit.xml", "log4cxx.xml", APR_FPROT_UREAD | APR_FPROT_UWRITE, p.getAPRPool());
+	}
 
-   void tearDown()
-   {
-      LogManager::shutdown();
-   }
+	void tearDown()
+	{
+		helpers::Pool p;
+		apr_file_remove("log4cxx.xml", p.getAPRPool());
+		LogManager::shutdown();
+	}
 
-   void combinedTest()
-   {
-      LoggerPtr root = Logger::getRootLogger();
-     LOG4CXX_DEBUG(root, "Hello, world");
-      bool rootIsConfigured = !root->getAllAppenders().empty();
-      LOGUNIT_ASSERT(rootIsConfigured);
+	void combinedTest()
+	{
+		LoggerPtr root = Logger::getRootLogger();
+		LOG4CXX_DEBUG(root, "Hello, world");
+		bool rootIsConfigured = !root->getAllAppenders().empty();
+		LOGUNIT_ASSERT(rootIsConfigured);
 
-      AppenderList list = root->getAllAppenders();
-      LOGUNIT_ASSERT_EQUAL((size_t) 1, list.size());
-      AppenderPtr appender = list.front();
-      LOGUNIT_ASSERT_EQUAL((LogString) LOG4CXX_STR("D1"), appender->getName());
-   }
+		AppenderList list = root->getAllAppenders();
+		LOGUNIT_ASSERT_EQUAL((size_t) 1, list.size());
+		AppenderPtr appender = list.front();
+		LOGUNIT_ASSERT_EQUAL((LogString) LOG4CXX_STR("D1"), appender->getName());
+	}
 
 };
 
-LOGUNIT_TEST_SUITE_REGISTRATION_DISABLED(TestCase4)
+LOGUNIT_TEST_SUITE_REGISTRATION(TestCase4)
 

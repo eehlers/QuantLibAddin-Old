@@ -22,78 +22,114 @@
 #include <log4cxx/helpers/loglog.h>
 #include <log4cxx/helpers/stringhelper.h>
 #include <log4cxx/spi/loggingevent.h>
+#include <log4cxx/hierarchy.h>
+#include <log4cxx/logmanager.h>
 
-using namespace log4cxx;
-using namespace log4cxx::helpers;
-using namespace log4cxx::spi;
-using namespace log4cxx::varia;
+using namespace LOG4CXX_NS;
+using namespace LOG4CXX_NS::helpers;
+using namespace LOG4CXX_NS::spi;
+using namespace LOG4CXX_NS::varia;
 
 IMPLEMENT_LOG4CXX_OBJECT(FallbackErrorHandler)
 
+struct FallbackErrorHandler::FallbackErrorHandlerPrivate
+{
+	AppenderWeakPtr backup;
+	AppenderWeakPtr primary;
+	std::vector<LoggerPtr> loggers;
+	bool errorReported = false;
+};
+
 FallbackErrorHandler::FallbackErrorHandler()
-    : backup(), primary(), loggers()
+	: m_priv(std::make_unique<FallbackErrorHandlerPrivate>())
 {
 }
 
-void FallbackErrorHandler::addRef() const {
-   ObjectImpl::addRef();
-}
-
-void FallbackErrorHandler::releaseRef() const {
-   ObjectImpl::releaseRef();
-}
+FallbackErrorHandler::~FallbackErrorHandler() {}
 
 void FallbackErrorHandler::setLogger(const LoggerPtr& logger)
 {
-        LogLog::debug(((LogString) LOG4CXX_STR("FB: Adding logger ["))
-              + logger->getName() + LOG4CXX_STR("]."));
-        loggers.push_back(logger);
+	if (LogLog::isDebugEnabled())
+	{
+		LogLog::debug(((LogString) LOG4CXX_STR("FB: Adding logger ["))
+			+ logger->getName() + LOG4CXX_STR("]."));
+	}
+	m_priv->loggers.push_back(logger);
 }
 
 void FallbackErrorHandler::error(const LogString& message,
-        const std::exception& e,
-        int errorCode) const
+	const std::exception& e,
+	int errorCode) const
 {
-        error(message, e, errorCode, 0);
+	error(message, e, errorCode, 0);
 }
 
 void FallbackErrorHandler::error(const LogString& message,
-        const std::exception& e,
-        int, const spi::LoggingEventPtr&) const
+	const std::exception& e,
+	int, const spi::LoggingEventPtr&) const
 {
-        LogLog::debug(((LogString) LOG4CXX_STR("FB: The following error reported: "))
-           +  message, e);
-        LogLog::debug(LOG4CXX_STR("FB: INITIATING FALLBACK PROCEDURE."));
-        for(size_t i = 0; i < loggers.size(); i++)
-        {
-                LoggerPtr& l = (LoggerPtr&)loggers.at(i);
-                LogLog::debug(((LogString) LOG4CXX_STR("FB: Searching for ["))
-                    + primary->getName() + LOG4CXX_STR("] in logger [")
-                    + l->getName() + LOG4CXX_STR("]."));
-                LogLog::debug(((LogString) LOG4CXX_STR("FB: Replacing ["))
-                   + primary->getName() + LOG4CXX_STR("] by [")
-                   + backup->getName() + LOG4CXX_STR("] in logger [")
-                   + l->getName() + LOG4CXX_STR("]."));
-                l->removeAppender(primary);
-                LogLog::debug(((LogString) LOG4CXX_STR("FB: Adding appender ["))
-                    + backup->getName() + LOG4CXX_STR("] to logger ")
-                    + l->getName());
-                l->addAppender(backup);
-        }
+	if (LogLog::isDebugEnabled())
+	{
+		LogLog::debug(((LogString) LOG4CXX_STR("FB: The following error reported: "))
+			+  message, e);
+		LogLog::debug(LOG4CXX_STR("FB: INITIATING FALLBACK PROCEDURE."));
+	}
+
+	AppenderPtr primaryLocked = m_priv->primary.lock();
+	AppenderPtr backupLocked = m_priv->backup.lock();
+
+	if ( !primaryLocked || !backupLocked )
+	{
+		return;
+	}
+
+	for (LoggerPtr l : m_priv->loggers)
+	{
+		if (LogLog::isDebugEnabled())
+		{
+			LogLog::debug(LOG4CXX_STR("FB: Replacing [")
+				+ primaryLocked->getName() + LOG4CXX_STR("] with [")
+				+ backupLocked->getName() + LOG4CXX_STR("] in logger [")
+				+ l->getName() + LOG4CXX_STR("]."));
+		}
+		if (!l->replaceAppender(primaryLocked, backupLocked))
+		{
+			LogLog::debug(LOG4CXX_STR("FB: Failed to replace [")
+				+ primaryLocked->getName() + LOG4CXX_STR("] with [")
+				+ backupLocked->getName() + LOG4CXX_STR("] in logger [")
+				+ l->getName() + LOG4CXX_STR("]."));
+		}
+	}
+	m_priv->errorReported = true;
 }
 
 void FallbackErrorHandler::setAppender(const AppenderPtr& primary1)
 {
-        LogLog::debug(((LogString) LOG4CXX_STR("FB: Setting primary appender to ["))
-           + primary1->getName() + LOG4CXX_STR("]."));
-        this->primary = primary1;
+	if (LogLog::isDebugEnabled())
+	{
+		LogLog::debug(((LogString) LOG4CXX_STR("FB: Setting primary appender to ["))
+			+ primary1->getName() + LOG4CXX_STR("]."));
+	}
+	m_priv->primary = primary1;
 }
 
 void FallbackErrorHandler::setBackupAppender(const AppenderPtr& backup1)
 {
-        LogLog::debug(((LogString) LOG4CXX_STR("FB: Setting backup appender to ["))
-            + backup1->getName() + LOG4CXX_STR("]."));
-        this->backup = backup1;
+	if (LogLog::isDebugEnabled())
+	{
+		LogLog::debug(((LogString) LOG4CXX_STR("FB: Setting backup appender to ["))
+			+ backup1->getName() + LOG4CXX_STR("]."));
+	}
+	m_priv->backup = backup1;
+
+	// Make sure that we keep a reference to the appender around, since otherwise
+	// the appender would be lost if it has no loggers that use it.
+	auto repository = LogManager::getLoggerRepository();
+	if (auto hierarchy = dynamic_cast<Hierarchy*>(repository.get()))
+	{
+		hierarchy->addAppender(backup1);
+	}
+
 }
 
 void FallbackErrorHandler::activateOptions(Pool&)
@@ -104,3 +140,7 @@ void FallbackErrorHandler::setOption(const LogString&, const LogString&)
 {
 }
 
+bool FallbackErrorHandler::errorReported() const
+{
+	return m_priv->errorReported;
+}

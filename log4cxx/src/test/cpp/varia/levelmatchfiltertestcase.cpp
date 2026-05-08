@@ -38,123 +38,129 @@ using namespace log4cxx::filter;
 
 LOGUNIT_CLASS(LevelMatchFilterTestCase)
 {
-        LOGUNIT_TEST_SUITE(LevelMatchFilterTestCase);
-                LOGUNIT_TEST(accept);
-                LOGUNIT_TEST(deny);
-        LOGUNIT_TEST_SUITE_END();
+	LOGUNIT_TEST_SUITE(LevelMatchFilterTestCase);
+	LOGUNIT_TEST(accept);
+	LOGUNIT_TEST(deny);
+	LOGUNIT_TEST_SUITE_END();
 
-        LoggerPtr root;
-        LoggerPtr logger;
+	LoggerPtr root;
+	LoggerPtr logger;
 
 public:
-        void setUp()
-        {
-                root = Logger::getRootLogger();
-                root->removeAllAppenders();
-                logger = Logger::getLogger(LOG4CXX_TEST_STR("test"));
-        }
+	void setUp()
+	{
+		root = Logger::getRootLogger();
+		root->removeAllAppenders();
+		logger = Logger::getLogger(LOG4CXX_TEST_STR("test"));
+	}
 
-        void tearDown()
-        {
-                root->getLoggerRepository()->resetConfiguration();
-        }
+	void tearDown()
+	{
+		auto rep = root->getLoggerRepository();
 
-        void accept()
-        {
-                // set up appender
-                LayoutPtr layout = new SimpleLayout();
-                AppenderPtr appender = new FileAppender(layout, ACCEPT_FILE, false);
+		if (rep)
+		{
+			rep->resetConfiguration();
+		}
+	}
 
-                // create LevelMatchFilter
-                LevelMatchFilterPtr matchFilter = new LevelMatchFilter();
+	void accept()
+	{
+		// set up appender
+		LayoutPtr layout = LayoutPtr(new SimpleLayout());
+		AppenderPtr appender = AppenderPtr(new FileAppender(layout, ACCEPT_FILE, false));
 
-                // attach match filter to appender
-                appender->addFilter(matchFilter);
+		// create LevelMatchFilter
+		LevelMatchFilterPtr matchFilter = LevelMatchFilterPtr(new LevelMatchFilter());
 
-                // attach DenyAllFilter to end of filter chain to deny neutral
-                // (non matching) messages
-                spi::FilterPtr filter(new DenyAllFilter());
-                appender->addFilter(filter);
+		// attach match filter to appender
+		appender->addFilter(matchFilter);
 
-                // set appender on root and set level to debug
-                root->addAppender(appender);
-                root->setLevel(Level::getDebug());
+		// attach DenyAllFilter to end of filter chain to deny neutral
+		// (non matching) messages
+		spi::FilterPtr filter(new DenyAllFilter());
+		appender->addFilter(filter);
 
-                LevelPtr levelArray[] =
-                        { Level::getDebug(), Level::getInfo(), Level::getWarn(), Level::getError(), Level::getFatal() };
+		// set appender on root and set level to debug
+		root->addAppender(appender);
+		root->setLevel(Level::getDebug());
 
-                int length = sizeof(levelArray)/sizeof(levelArray[0]);
+		LevelPtr levelArray[] =
+		{ Level::getDebug(), Level::getInfo(), Level::getWarn(), Level::getError(), Level::getFatal() };
 
-                Pool pool;
-                for (int x = 0; x < length; x++)
-                {
-                        // set the level to match
-                        matchFilter->setLevelToMatch(levelArray[x]->toString());
-                        LogString sbuf(LOG4CXX_STR("pass "));
-                        StringHelper::toString(x, pool, sbuf);
-                        sbuf.append(LOG4CXX_STR("; filter set to accept only "));
-                        sbuf.append(levelArray[x]->toString());
-                        sbuf.append(LOG4CXX_STR(" msgs"));
-                        common(sbuf);
-                }
+		int length = sizeof(levelArray) / sizeof(levelArray[0]);
 
-                LOGUNIT_ASSERT(Compare::compare(ACCEPT_FILE, ACCEPT_WITNESS));
-        }
+		Pool pool;
 
-        void deny()
-        {
-                // set up appender
-                LayoutPtr layout = new SimpleLayout();
-                AppenderPtr appender = new FileAppender(layout, DENY_FILE, false);
+		for (int x = 0; x < length; x++)
+		{
+			// set the level to match
+			matchFilter->setLevelToMatch(levelArray[x]->toString());
+			LogString sbuf(LOG4CXX_STR("pass "));
+			StringHelper::toString(x, pool, sbuf);
+			sbuf.append(LOG4CXX_STR("; filter set to accept only "));
+			sbuf.append(levelArray[x]->toString());
+			sbuf.append(LOG4CXX_STR(" msgs"));
+			common(sbuf);
+		}
 
-                // create LevelMatchFilter, set to deny matches
-                LevelMatchFilterPtr matchFilter = new LevelMatchFilter();
-                matchFilter->setAcceptOnMatch(false);
+		LOGUNIT_ASSERT(Compare::compare(ACCEPT_FILE, ACCEPT_WITNESS));
+	}
 
-                // attach match filter to appender
-                appender->addFilter(matchFilter);
+	void deny()
+	{
+		// set up appender
+		LayoutPtr layout = LayoutPtr(new SimpleLayout());
+		AppenderPtr appender = AppenderPtr(new FileAppender(layout, DENY_FILE, false));
 
-                // set appender on root and set level to debug
-                root->addAppender(appender);
-                root->setLevel(Level::getDebug());
+		// create LevelMatchFilter, set to deny matches
+		LevelMatchFilterPtr matchFilter = LevelMatchFilterPtr(new LevelMatchFilter());
+		matchFilter->setAcceptOnMatch(false);
 
-                LevelPtr levelArray[] =
-                        { Level::getDebug(), Level::getInfo(), Level::getWarn(), Level::getError(), Level::getFatal() };
+		// attach match filter to appender
+		appender->addFilter(matchFilter);
 
-                int length = sizeof(levelArray)/sizeof(levelArray[0]);
+		// set appender on root and set level to debug
+		root->addAppender(appender);
+		root->setLevel(Level::getDebug());
 
-                Pool pool;
+		LevelPtr levelArray[] =
+		{ Level::getDebug(), Level::getInfo(), Level::getWarn(), Level::getError(), Level::getFatal() };
 
-                for (int x = 0; x < length; x++)
-                {
-                        // set the level to match
-                        matchFilter->setLevelToMatch(levelArray[x]->toString());
-                        LogString sbuf(LOG4CXX_STR("pass "));
+		int length = sizeof(levelArray) / sizeof(levelArray[0]);
 
-                        StringHelper::toString(x, pool, sbuf);
-                        sbuf.append(LOG4CXX_STR("; filter set to deny only "));
-                        sbuf.append(levelArray[x]->toString());
-                        sbuf.append(LOG4CXX_STR(" msgs"));
-                        common(sbuf);
-                }
+		Pool pool;
 
-                LOGUNIT_ASSERT(Compare::compare(DENY_FILE, DENY_WITNESS));
-        }
+		for (int x = 0; x < length; x++)
+		{
+			// set the level to match
+			matchFilter->setLevelToMatch(levelArray[x]->toString());
+			LogString sbuf(LOG4CXX_STR("pass "));
 
-        void common(const LogString& msg)
-        {
-                logger->debug(msg);
-                logger->info(msg);
-                logger->warn(msg);
-                logger->error(msg);
-                logger->fatal(msg);
-        }
+			StringHelper::toString(x, pool, sbuf);
+			sbuf.append(LOG4CXX_STR("; filter set to deny only "));
+			sbuf.append(levelArray[x]->toString());
+			sbuf.append(LOG4CXX_STR(" msgs"));
+			common(sbuf);
+		}
+
+		LOGUNIT_ASSERT(Compare::compare(DENY_FILE, DENY_WITNESS));
+	}
+
+	void common(const LogString & msg)
+	{
+		logger->debug(msg);
+		logger->info(msg);
+		logger->warn(msg);
+		logger->error(msg);
+		logger->fatal(msg);
+	}
 
 private:
-        static const LogString ACCEPT_FILE;
-        static const LogString ACCEPT_WITNESS;
-        static const LogString DENY_FILE;
-        static const LogString DENY_WITNESS;
+	static const LogString ACCEPT_FILE;
+	static const LogString ACCEPT_WITNESS;
+	static const LogString DENY_FILE;
+	static const LogString DENY_WITNESS;
 
 
 };

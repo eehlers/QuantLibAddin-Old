@@ -1,0 +1,17 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckIncludeFileCXX.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/FindPackageMessage.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/FindThreads.cmake
+C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake
+C:/Scratch/ql/log4cxx/src/CMakeLists.txt
+C:/Scratch/ql/log4cxx/src/cmake/FindLibFuzzer.cmake
+C:/Scratch/ql/log4cxx/src/cmake/boost-fallback/boost-fallback.cmake
+C:/Scratch/ql/log4cxx/src/cmake/boost-fallback/test-stdexpfilesystem.cpp
+C:/Scratch/ql/log4cxx/src/cmake/boost-fallback/test-stdfilesystem.cpp
+C:/Scratch/ql/log4cxx/src/cmake/compiler-features/check-compiler-support.cmake
+C:/Scratch/ql/log4cxx/src/cmake/compiler-features/test-make-unique.cpp
+C:/Scratch/ql/log4cxx/src/cmake/compiler-features/test-thread-local.cpp
+C:/Scratch/ql/log4cxx/src/cmake/compiler-features/test-unicode.cpp
