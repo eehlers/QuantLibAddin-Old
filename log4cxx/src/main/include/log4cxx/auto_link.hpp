@@ -37,8 +37,16 @@
 #  define LOG4CXX_LIB_TOOLSET "vc100"
 #elif (_MSC_VER == 1700)
 #  define LOG4CXX_LIB_TOOLSET "vc110"
+#elif (_MSC_VER >= 1950)
+#  define LOG4CXX_LIB_TOOLSET "v145"
+#elif (_MSC_VER >= 1924)
+#  define LOG4CXX_LIB_TOOLSET "v142"
+#elif (_MSC_VER >= 1910)
+#  define LOG4CXX_LIB_TOOLSET "v141"
+#elif (_MSC_VER >= 1900)
+#  define LOG4CXX_LIB_TOOLSET "v140"
 #else
-#  error "unknown Microsoft compiler"
+#  define LOG4CXX_LIB_TOOLSET "v143"
 #endif
 
 /*** libraries to be linked ***/

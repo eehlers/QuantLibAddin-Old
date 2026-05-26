@@ -24,7 +24,9 @@
 #include <oh/ohdefines.hpp>
 
 // select toolset:
-#if (_MSC_VER >= 1924)
+#if (_MSC_VER >= 1950)
+#  define OBJHANDLER_LIB_TOOLSET "v145"
+#elif (_MSC_VER >= 1924)
 #  define OBJHANDLER_LIB_TOOLSET "v142"
 #elif (_MSC_VER >= 1910)
 #  define OBJHANDLER_LIB_TOOLSET "v141"

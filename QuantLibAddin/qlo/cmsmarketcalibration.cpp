@@ -25,7 +25,7 @@
 #include <qlo/cmsmarket.hpp>
 #include <qlo/swaptionvolstructure.hpp>
 
-#include <boost/timer.hpp>
+#include <chrono>
 
 using boost::shared_ptr;
 using ObjectHandler::LibraryObject;
@@ -70,13 +70,13 @@ namespace QuantLibAddin {
                                  const shared_ptr<OptimizationMethod>& method,
                                  const QuantLib::Array& guess,
                                  bool isMeanReversionFixed) {
-        boost::timer t;
-        t.restart();
+        auto t_start = std::chrono::steady_clock::now();
         QuantLib::Array result = libraryObject_->compute(endCriteria,
                                 method,
                                 guess,
                                 isMeanReversionFixed);
-        elapsed_ = t.elapsed();
+        auto t_end = std::chrono::steady_clock::now();
+        elapsed_ = std::chrono::duration<double>(t_end - t_start).count();
         return result;
    }
 
