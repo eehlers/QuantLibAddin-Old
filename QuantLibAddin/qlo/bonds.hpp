@@ -50,7 +50,28 @@ namespace QuantLibAddin {
       public:
         const std::string& description();
         std::string currency() { return currency_.code(); }
-        //QuantLib::Currency currency();
+
+        QuantLib::Real price(const QuantLib::Bond::Price::Type priceType);
+
+        QuantLib::Real price(const QuantLib::Bond::Price::Type priceType,
+            QuantLib::Rate y,
+            const QuantLib::DayCounter& dc,
+            QuantLib::Compounding comp,
+            QuantLib::Frequency freq,
+            QuantLib::Date settlement);
+
+        QuantLib::Real price(const QuantLib::Bond::Price::Type priceType,
+            const QuantLib::YieldTermStructure& discountCurve,
+            QuantLib::Date settlementDate);
+
+        QuantLib::Real price(const QuantLib::Bond::Price::Type priceType, 
+            const QuantLib::ext::shared_ptr<QuantLib::YieldTermStructure>& discount,
+            QuantLib::Spread zSpread,
+            const QuantLib::DayCounter& dayCounter,
+            QuantLib::Compounding compounding,
+            QuantLib::Frequency frequency,
+            QuantLib::Date settlementDate);
+
         QuantLib::Real redemptionAmount();
         QuantLib::Date redemptionDate();
         void setCouponPricer(
@@ -59,6 +80,17 @@ namespace QuantLibAddin {
             const std::vector<boost::shared_ptr<QuantLib::FloatingRateCouponPricer> >&);
         std::vector<std::vector<ObjectHandler::property_t> > flowAnalysis(
                                                     const QuantLib::Date& d);
+        QuantLib::Rate yield(
+            QuantLib::Real price,
+            QuantLib::Bond::Price::Type priceType,
+            const QuantLib::DayCounter& dayCounter,
+            QuantLib::Compounding compounding,
+            QuantLib::Frequency frequency,
+            QuantLib::Date settlementDate,
+            QuantLib::Real accuracy,
+            QuantLib::Size maxIterations,
+            QuantLib::Rate guess);
+
         Bond(const boost::shared_ptr<ObjectHandler::ValueObject>& properties,
              const std::string& description,
              const QuantLib::Currency& currency,

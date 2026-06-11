@@ -34,6 +34,7 @@
 #include <ql/instruments/bonds/cmsratebond.hpp>
 #include <ql/instruments/bonds/floatingratebond.hpp>
 #include <ql/cashflows/couponpricer.hpp>
+#include <ql/pricingengines/bond/bondfunctions.hpp>
 #include <ql/pricingengines/bond/discountingbondengine.hpp>
 #include <ql/indexes/swapindex.hpp>
 #include <ql/interestrate.hpp>
@@ -61,6 +62,110 @@ namespace QuantLibAddin {
         const QuantLib::Leg& cashflows = temp->cashflows();
 
         return QuantLibAddin::flowAnalysis(cashflows, d);
+    }
+
+    QuantLib::Real Bond::price(const QuantLib::Bond::Price::Type priceType) {
+        shared_ptr<QuantLib::Bond> b;
+        getLibraryObject(b);
+
+        switch (priceType)
+        {
+        case QuantLib::Bond::Price::Clean:
+            return b->cleanPrice();
+        case QuantLib::Bond::Price::Dirty:
+            return b->dirtyPrice();
+        default:
+            return 0.;
+        }
+    }
+
+    QuantLib::Real Bond::price(const QuantLib::Bond::Price::Type priceType,
+        QuantLib::Rate y,
+        const QuantLib::DayCounter& dc,
+        QuantLib::Compounding comp,
+        QuantLib::Frequency freq,
+        QuantLib::Date settlement)
+    {
+        shared_ptr<QuantLib::Bond> b;
+        getLibraryObject(b);
+
+        switch (priceType)
+        {
+        case QuantLib::Bond::Price::Clean:
+            return b->cleanPrice(y, dc, comp, freq, settlement);
+        case QuantLib::Bond::Price::Dirty:
+            return b->dirtyPrice(y, dc, comp, freq, settlement);
+        default:
+            return 0.;
+        }
+    }
+
+    QuantLib::Real Bond::price(const QuantLib::Bond::Price::Type priceType,
+        const QuantLib::YieldTermStructure& discountCurve,
+        QuantLib::Date settlementDate)
+    {
+        shared_ptr<QuantLib::Bond> b;
+        getLibraryObject(b);
+
+        switch (priceType)
+        {
+        case QuantLib::Bond::Price::Clean:
+            return QuantLib::BondFunctions::cleanPrice(*b, discountCurve, settlementDate);
+        case QuantLib::Bond::Price::Dirty:
+            return QuantLib::BondFunctions::dirtyPrice(*b, discountCurve, settlementDate);
+        default:
+            return 0.;
+        }
+    }
+
+    QuantLib::Real Bond::price(const QuantLib::Bond::Price::Type priceType,
+        const QuantLib::ext::shared_ptr<QuantLib::YieldTermStructure>& discount,
+        QuantLib::Spread zSpread,
+        const QuantLib::DayCounter& dayCounter,
+        QuantLib::Compounding compounding,
+        QuantLib::Frequency frequency,
+        QuantLib::Date settlementDate)
+    {
+        shared_ptr<QuantLib::Bond> b;
+        getLibraryObject(b);
+
+        switch (priceType)
+        {
+        case QuantLib::Bond::Price::Clean:
+            return QuantLib::BondFunctions::cleanPrice(*b, discount, zSpread, dayCounter, compounding, frequency, settlementDate);
+        case QuantLib::Bond::Price::Dirty:
+            return QuantLib::BondFunctions::dirtyPrice(*b, discount, zSpread, dayCounter, compounding, frequency, settlementDate);
+        default:
+            return 0.;
+        }
+    }
+
+    QuantLib::Rate Bond::yield(
+        QuantLib::Real price,
+        QuantLib::Bond::Price::Type priceType,
+        const QuantLib::DayCounter& dayCounter,
+        QuantLib::Compounding compounding,
+        QuantLib::Frequency frequency,
+        QuantLib::Date settlementDate,
+        QuantLib::Real accuracy,
+        QuantLib::Size maxIterations,
+        QuantLib::Rate guess)
+    {
+        shared_ptr<QuantLib::Bond> b;
+        getLibraryObject(b);
+
+        return QuantLib::BondFunctions::yield(
+            *b,
+            price,
+            dayCounter,
+            compounding,
+            frequency,
+            settlementDate,
+            accuracy,
+            maxIterations,
+            guess,
+            priceType
+        );
     }
 
     QuantLib::Real Bond::redemptionAmount() {
@@ -222,17 +327,17 @@ namespace QuantLibAddin {
             bool permanent)
     : Bond(properties, des, cur, permanent)
     {
-		vector<QuantLib::InterestRate> couponRate(coupons.size());
+        vector<QuantLib::InterestRate> couponRate(coupons.size());
 
-		for (Size i=0; i<coupons.size(); ++i)
-			couponRate[i] = *coupons[i];
+        for (Size i=0; i<coupons.size(); ++i)
+            couponRate[i] = *coupons[i];
 
         qlBondObject_ = shared_ptr<QuantLib::FixedRateBond>(new
             QuantLib::FixedRateBond(settlementDays, faceAmount,
                                     *schedule,
                                     couponRate,
                                     paymentConvention,
-									redemption,
+                                    redemption,
                                     issueDate,
                                     paymentCalendar));
         libraryObject_ = qlBondObject_;
